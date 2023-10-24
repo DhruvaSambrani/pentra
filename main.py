@@ -35,7 +35,7 @@ class Player(pygame.sprite.Sprite):
             a[1] *= self.speed/l
             self._steps_since_sound += 1
         if self._steps_since_sound > self._steps_for_sound:
-            pygame.mixer.Sound("assets/audio/steps.mp3").play()
+            pygame.mixer.Sound("./assets/audio/steps.ogg").play()
             self._steps_since_sound = 0
         self.rect.move_ip(*a)
     def draw(self, surface):
@@ -86,7 +86,7 @@ class App:
         self._display_surf.blit(font.render("This music is pretty catchy hunh?", True, BGCOLOR), (250, 530))
         pygame.display.update()
         pause(30, self.FPS)
-        pygame.mixer.Sound("./assets/audio/earthquake.mp3").play()
+        pygame.mixer.Sound("./assets/audio/earthquake.ogg").play()
         pause(60, self.FPS)
         self._display_surf.fill(BGCOLOR)        
         pygame.display.update()
@@ -106,7 +106,7 @@ class App:
         self._display_surf.blit(font.render("What was that sound though?", True, FGCOLOR), (250, 390))
         pygame.display.update()
         pause(60, self.FPS)
-        pygame.mixer.Sound("./assets/audio/bell.mp3").play()
+        pygame.mixer.Sound("./assets/audio/bell.ogg").play()
         pause(60, self.FPS)
         self._display_surf.blit(font.render("Ahh it's midnight", True, FGCOLOR), (250, 420))
         pygame.display.update()
