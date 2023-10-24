@@ -16,6 +16,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = startloc
         self.speed = 5 
+        self._steps_since_sound = 0
+        self._steps_for_sound = 15
 
     def update(self, keys):
         a = [0, 0]
@@ -31,6 +33,10 @@ class Player(pygame.sprite.Sprite):
         if l != 0:
             a[0] *= self.speed/l
             a[1] *= self.speed/l
+            self._steps_since_sound += 1
+        if self._steps_since_sound > self._steps_for_sound:
+            pygame.mixer.Sound("assets/audio/steps.mp3").play()
+            self._steps_since_sound = 0
         self.rect.move_ip(*a)
     def draw(self, surface):
         surface.blit(self.image, self.rect)
@@ -50,9 +56,14 @@ class App:
     def actual_init(self):
         self._display_surf.fill(BGCOLOR)
         self._running = True
-        pygame.mixer.music.load('./assets/audio/lacrimosa.opus')
 
-    def startup_sequence(self):
+    def startup_sequence(self, passthrough=False):
+        if passthrough:
+            font = pygame.font.SysFont("Verdana", 30)
+            pygame.mixer.music.load("./assets/audio/scary.mp3")
+            pygame.mixer.music.play(-1)
+            return
+
         self._display_surf.fill(FGCOLOR)
         pygame.mixer.music.load("./assets/audio/lofi.mp3")
         pygame.mixer.music.play(-1)
@@ -81,8 +92,8 @@ class App:
         pygame.display.update()
         pygame.mixer.music.stop()
         pygame.mixer.music.load("./assets/audio/scary.mp3")
-        pygame.mixer.music.play()
-        pause(30, self.FPS)
+        pygame.mixer.music.play(-1)
+        pause(90, self.FPS)
         self._display_surf.blit(font.render("Wha... What just happened???", True, FGCOLOR), (250, 300))
         pygame.display.update()
         pause(120, self.FPS)
@@ -127,7 +138,7 @@ class App:
             self._running = False
         
         if self._running:
-            self.startup_sequence()
+            self.startup_sequence(passthrough=True) ## ONLY FOR DEV PURPOSE
             self.actual_init()
         while( self._running ):
             for event in pygame.event.get():
