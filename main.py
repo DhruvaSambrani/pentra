@@ -1,18 +1,13 @@
 import pygame
-import math 
+import math
+from utils import load_image, load_music, play_sound, pause
+from utils import BG_COLOR, FG_COLOR
 from pygame.locals import *
-
-BGCOLOR=(17,17,27)
-FGCOLOR=(242,213,207)
-
-def pause(time, clock):
-    for i in range(time):
-        clock.tick(30)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, startloc):
         super().__init__()
-        self.image = pygame.image.load("./assets/sprite/player.png")
+        self.image = load_image("player.png")
         self.rect = self.image.get_rect()
         self.rect.center = startloc
         self.speed = 5 
@@ -35,7 +30,7 @@ class Player(pygame.sprite.Sprite):
             a[1] *= self.speed/l
             self._steps_since_sound += 1
         if self._steps_since_sound > self._steps_for_sound:
-            pygame.mixer.Sound("./assets/audio/steps.ogg").play()
+            play_sound("steps.ogg")
             self._steps_since_sound = 0
         self.rect.move_ip(*a)
     def draw(self, surface):
@@ -54,67 +49,67 @@ class App:
         self.FPS = pygame.time.Clock()
 
     def actual_init(self):
-        self._display_surf.fill(BGCOLOR)
+        self._display_surf.fill(BG_COLOR)
         self._running = True
 
     def startup_sequence(self, passthrough=False):
         if passthrough:
             font = pygame.font.SysFont("Verdana", 30)
-            pygame.mixer.music.load("./assets/audio/scary.mp3")
+            load_music("scary.mp3")
             pygame.mixer.music.play(-1)
             return
 
-        self._display_surf.fill(FGCOLOR)
-        pygame.mixer.music.load("./assets/audio/lofi.mp3")
+        self._display_surf.fill(FG_COLOR)
+        load_music("lofi.mp3")
         pygame.mixer.music.play(-1)
         font = pygame.font.SysFont("Verdana", 30)
-        self._display_surf.blit(font.render("A nice Saturday night", True, BGCOLOR), (250, 330))
+        self._display_surf.blit(font.render("A nice Saturday night", True, BG_COLOR), (250, 330))
         pygame.display.update()
         pause(60, self.FPS)
-        self._display_surf.blit(font.render("You are nearly done with your homework", True, BGCOLOR), (250, 370))
+        self._display_surf.blit(font.render("You are nearly done with your homework", True, BG_COLOR), (250, 370))
         pygame.display.update()
         pause(60, self.FPS)
-        self._display_surf.blit(font.render("Its almost 12am", True, BGCOLOR), (250, 410))
+        self._display_surf.blit(font.render("Its almost 12am", True, BG_COLOR), (250, 410))
         pygame.display.update()
         pause(60, self.FPS)
-        self._display_surf.blit(font.render("The weather is surprisingly nice. Not hot, but definitely not cold", True, BGCOLOR), (250, 450))
+        self._display_surf.blit(font.render("The weather is surprisingly nice. Not hot, but definitely not cold", True, BG_COLOR), (250, 450))
         pygame.display.update()
         pause(60, self.FPS)
-        self._display_surf.blit(font.render("The vending machine coffee is not GREAT, but you've had worse...", True, BGCOLOR), (250, 490))
+        self._display_surf.blit(font.render("The vending machine coffee is not GREAT, but you've had worse...", True, BG_COLOR), (250, 490))
         pygame.display.update()
         pause(60, self.FPS)
-        self._display_surf.blit(font.render("This music is pretty catchy hunh?", True, BGCOLOR), (250, 530))
+        self._display_surf.blit(font.render("This music is pretty catchy hunh?", True, BG_COLOR), (250, 530))
         pygame.display.update()
         pause(30, self.FPS)
-        pygame.mixer.Sound("./assets/audio/earthquake.ogg").play()
+        play_sound("earthquake.ogg")
         pause(60, self.FPS)
-        self._display_surf.fill(BGCOLOR)        
+        self._display_surf.fill(BG_COLOR)        
         pygame.display.update()
         pygame.mixer.music.stop()
-        pygame.mixer.music.load("./assets/audio/scary.mp3")
+        load_music("scary.mp3")
         pygame.mixer.music.play(-1)
         pause(90, self.FPS)
-        self._display_surf.blit(font.render("Wha... What just happened???", True, FGCOLOR), (250, 300))
+        self._display_surf.blit(font.render("Wha... What just happened???", True, FG_COLOR), (250, 300))
         pygame.display.update()
         pause(120, self.FPS)
-        self._display_surf.blit(font.render("Did the lights go out?", True, FGCOLOR), (250, 330))
+        self._display_surf.blit(font.render("Did the lights go out?", True, FG_COLOR), (250, 330))
         pygame.display.update()
         pause(120, self.FPS)
-        self._display_surf.blit(font.render("Aaah typical IISER infrastructure, amirite?", True, FGCOLOR), (250, 360))
+        self._display_surf.blit(font.render("Aaah typical IISER infrastructure, amirite?", True, FG_COLOR), (250, 360))
         pygame.display.update()
         pause(60, self.FPS)
-        self._display_surf.blit(font.render("What was that sound though?", True, FGCOLOR), (250, 390))
+        self._display_surf.blit(font.render("What was that sound though?", True, FG_COLOR), (250, 390))
         pygame.display.update()
         pause(60, self.FPS)
-        pygame.mixer.Sound("./assets/audio/bell.ogg").play()
+        play_sound("bell.ogg")
         pause(60, self.FPS)
-        self._display_surf.blit(font.render("Ahh it's midnight", True, FGCOLOR), (250, 420))
+        self._display_surf.blit(font.render("Ahh it's midnight", True, FG_COLOR), (250, 420))
         pygame.display.update()
         pause(60, self.FPS)
-        self._display_surf.blit(font.render("Since when is there a bell at IISER?", True, FGCOLOR), (250, 450))
+        self._display_surf.blit(font.render("Since when is there a bell at IISER?", True, FG_COLOR), (250, 450))
         pygame.display.update()
         pause(60, self.FPS)
-        self._display_surf.blit(font.render("Something is weird. Where is my phone?", True, FGCOLOR), (250, 480))
+        self._display_surf.blit(font.render("Something is weird. Where is my phone?", True, FG_COLOR), (250, 480))
         pygame.display.update()
         pause(90, self.FPS)
     
@@ -126,19 +121,19 @@ class App:
         self.player.update(pygame.key.get_pressed())
 
     def on_render(self):
-        self._display_surf.fill(BGCOLOR)
+        self._display_surf.fill(BG_COLOR)
         self.player.draw(self._display_surf)
 
     def on_cleanup(self):
         pygame.mixer.music.stop()
         pygame.quit()
  
-    def on_execute(self):
+    def on_execute(self, dev = True):
         if self.on_init() == False:
             self._running = False
         
         if self._running:
-            self.startup_sequence(passthrough=True) ## ONLY FOR DEV PURPOSE
+            self.startup_sequence(passthrough=dev) ## ONLY FOR DEV PURPOSE
             self.actual_init()
         while( self._running ):
             for event in pygame.event.get():
@@ -151,5 +146,6 @@ class App:
  
 if __name__ == "__main__" :
     theApp = App()
-    theApp.on_execute()
+    theApp.on_execute(dev = False)
+
 
