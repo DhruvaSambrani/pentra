@@ -1,0 +1,8 @@
+{
+    "IMG_PATH": "./assets/sprite",
+    "AUDIO_PATH": "./assets/audio",
+    "SCENE_PATH": "./assets/scene",
+    
+    "BG_COLOR": [17, 17, 17], 
+    "FG_COLOR": [242, 213, 207]
+}
