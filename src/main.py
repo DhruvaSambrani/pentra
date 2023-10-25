@@ -71,7 +71,7 @@ class App:
 
     def startup_sequence(self):
         pause(30, self.FPS)
-        # load_asset("scene", "open1.scn").invert_colors().play(self)
+        load_asset("scene", "open1.scn").invert_colors().play(self)
         load_asset("scene", "open2.scn").play(self)
         pause(30, self.FPS)
 
@@ -117,4 +117,4 @@ class App:
 
 if __name__ == "__main__":
     theApp = App()
-    theApp.on_execute(debug=False)
+    theApp.on_execute(debug=True)
