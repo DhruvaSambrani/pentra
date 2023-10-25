@@ -65,7 +65,7 @@ class App:
         self._display_surf.fill(settings.bg_color)
         self._running = True
 
-    def startup_sequence(self, passthrough=False):
+    def startup_sequence(self):
         pause(30, self.FPS)
         load_asset("scene", "open1.scn").invert_colors().play(self)
         load_asset("scene", "open2.scn").play(self)
@@ -86,12 +86,12 @@ class App:
         pygame.mixer.music.stop()
         pygame.quit()
 
-    def on_execute(self):
+    def on_execute(self, debug = False):
         if not self.on_init():
             self._running = False
 
         if self._running:
-            self.startup_sequence()  # ONLY FOR DEV PURPOSE
+            if not debug: self.startup_sequence()  # ONLY FOR DEV PURPOSE
             self.actual_init()
 
         while self._running:
@@ -106,4 +106,4 @@ class App:
 
 if __name__ == "__main__":
     theApp = App()
-    theApp.on_execute()
+    theApp.on_execute(debug = True)
