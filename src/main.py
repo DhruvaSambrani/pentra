@@ -83,6 +83,8 @@ class App:
                 self.inventory.update(1)
             if event.key == settings.key_map["inv_left"]:
                 self.inventory.update(-1)
+            if event.key == settings.key_map["inv_info"]:
+                self.inventory.show_info = not self.inventory.show_info
 
     def on_loop(self):
         self.player.update(pygame.key.get_pressed())
