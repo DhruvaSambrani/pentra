@@ -2,6 +2,7 @@ import math, os
 
 import pygame
 from pygame.locals import K_DOWN, K_LEFT, K_RIGHT, K_UP
+from pygame.math import Vector2
 
 from assets import load_asset
 from settings import settings
@@ -16,29 +17,22 @@ class Player(pygame.sprite.Sprite):
         self.image = load_asset("sprite", "player.png")
         self.rect = self.image.get_rect()
         self.rect.center = startloc
-        self.speed = 5
+        self.speed = 6
         self._steps_since_sound = 0
         self._steps_for_sound = 15
 
     def update(self, keys):
-        a = [0, 0]
-        if keys[K_UP]:
-            a[1] += -1
-        if keys[K_DOWN]:
-            a[1] += +1
-        if keys[K_LEFT]:
-            a[0] += -1
-        if keys[K_RIGHT]:
-            a[0] += +1
-        dist = math.sqrt(a[0] ** 2 + a[1] ** 2)
-        if dist != 0:
-            a[0] *= self.speed / dist
-            a[1] *= self.speed / dist
+        dir = Vector2(
+            (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]), 
+            (keys[pygame.K_DOWN] - keys[pygame.K_UP])
+            )
+        if dir != Vector2(0, 0):
+            dir = dir.normalize() * self.speed
             self._steps_since_sound += 1
         if self._steps_since_sound > self._steps_for_sound:
             load_asset("sound", "steps.ogg").play()
             self._steps_since_sound = 0
-        self.rect.move_ip(*a)
+        self.rect.move_ip(*dir)
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
