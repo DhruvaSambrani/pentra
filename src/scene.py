@@ -1,5 +1,4 @@
 import argparse
-import re
 import shlex
 
 import pygame
@@ -8,7 +7,7 @@ import assets
 from utils import pause
 
 
-### Adapted from: https://stackoverflow.com/questions/64042648/how-do-i-blit-text-letter-by-letter-in-pygame-like-in-those-retro-rpg-games
+# Adapted from: https://stackoverflow.com/questions/64042648/how-do-i-blit-text-letter-by-letter-in-pygame-like-in-those-retro-rpg-games
 def generate_letters(word, pos, font, txt_col):
     surfaces = []
     positions = []

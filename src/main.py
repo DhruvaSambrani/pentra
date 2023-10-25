@@ -1,11 +1,10 @@
 import os
 
 import pygame
-from pygame.locals import K_DOWN, K_LEFT, K_RIGHT, K_UP
 from pygame.math import Vector2
 
 from assets import load_asset
-from inventory import Inventory, Item
+from inventory import Inventory
 from settings import settings
 from utils import pause
 
