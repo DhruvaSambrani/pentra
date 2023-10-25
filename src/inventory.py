@@ -1,4 +1,5 @@
 import pygame
+from settings import settings
 
 class Item:
     def __init__(self):
@@ -10,8 +11,8 @@ class Slot:
         
     def render(self, pos, border, surface):
         r = pygame.Rect(*pos, 60, 60)
-        pygame.draw.rect(surface, (150, 150, 150), r, border)
-        surface.fill((50, 50, 50), r)
+        pygame.draw.rect(surface, settings.palette["GREY2"], r, border)
+        surface.fill(settings.palette["GREY1"], r)
 
 class Inventory:
     def __init__(self, num_slots):

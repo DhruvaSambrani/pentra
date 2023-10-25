@@ -58,7 +58,7 @@ class App:
         return True
 
     def actual_init(self):
-        self._display_surf.fill(settings.bg_color)
+        self._display_surf.fill(settings.palette["BLACK"])
         self._running = True
 
     def startup_sequence(self):
@@ -80,7 +80,7 @@ class App:
         self.player.update(pygame.key.get_pressed())
 
     def on_render(self):
-        self._display_surf.fill(settings.bg_color)
+        self._display_surf.fill(settings.palette["BLACK"])
         self.player.render(self._display_surf)
         self.inventory.render(self._display_surf)
 

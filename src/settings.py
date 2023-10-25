@@ -1,7 +1,7 @@
 import json, pygame
 from collections import namedtuple
 
-Settings = namedtuple("Settings", "assets bg_color fg_color key_map")
+Settings = namedtuple("Settings", "assets palette key_map")
 
 
 def load_config(config_path="./config.json"):
@@ -10,7 +10,7 @@ def load_config(config_path="./config.json"):
     for key, value in KEY_MAP.items():
         KEY_MAP[key] = eval("pygame.K_" + value)
 
-    return Settings(data["ASSETS_PATH"], data["BG_COLOR"], data["FG_COLOR"], KEY_MAP)
+    return Settings(data["ASSETS_PATH"], data["PALETTE"], KEY_MAP)
 
 
 settings = load_config()

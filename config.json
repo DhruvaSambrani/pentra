@@ -1,7 +1,11 @@
 {
     "ASSETS_PATH": "assets",
-    "BG_COLOR": [17, 17, 17], 
-    "FG_COLOR": [242, 213, 207],
+    "PALETTE":{
+        "PEACH": [242, 213, 207],
+        "BLACK": [17, 17, 17],
+        "GREY1": [50, 50, 50],
+        "GREY2": [150, 150, 150]
+    },
     "KEY_MAP": {
         "move_left": "a",
         "move_right": "d",
