@@ -1,7 +1,6 @@
 import os
 
 import pygame
-from pygame.locals import *
 
 import scene
 from settings import settings
@@ -19,7 +18,7 @@ def load_asset(assettype, name):
         pygame.mixer.music.load(filepath)
         return
     return filepath
-    
+
 
 def play_music(file_name, repeat=-1):
     pygame.mixer.music.stop()
