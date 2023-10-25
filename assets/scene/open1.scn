@@ -1,14 +1,14 @@
--"lofi.mp3#1"
->"A nice Saturday night"
-."60"
->"You are nearly done with your homework"
-."60"
->"Its almost 12am"
-."60"
->"The weather is surprisingly nice. Not hot, but definitely not cold"
-."60"
->"The vending machine coffee is not GREAT, but you've had worse..."
-."60"
->"This music is pretty catchy hunh?"
--"earthquake.ogg"
-."60"
+music "lofi.mp3" -r 1
+type "A nice Saturday night"
+pause 20
+type "You are nearly done with your homework"
+pause 20
+type "Its almost 12am"
+pause 20
+type "The weather is surprisingly nice. Not hot, but definitely not cold"
+pause 20
+type "The vending machine coffee is not GREAT, but you've had worse..."
+pause 20
+type "This music is pretty catchy hunh?"
+sound "earthquake.ogg"
+pause 60

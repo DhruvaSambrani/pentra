@@ -11,8 +11,8 @@ class Slot:
         
     def render(self, pos, border, surface):
         r = pygame.Rect(*pos, 60, 60)
-        pygame.draw.rect(surface, settings.palette["GREY2"], r, border)
         surface.fill(settings.palette["GREY1"], r)
+        pygame.draw.rect(surface, settings.palette["GREY2"], r, border)
 
 class Inventory:
     def __init__(self, num_slots):

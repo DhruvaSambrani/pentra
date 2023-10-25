@@ -13,6 +13,7 @@
         "move_down": "s",
         "inv_left": "h",
         "inv_right": "k",
-        "inv_select": "j"
+        "inv_select": "j",
+        "run": "LSHIFT"
     }
 }

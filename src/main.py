@@ -18,9 +18,9 @@ class Player(pygame.sprite.Sprite):
         self.image = load_asset("sprite", "player.png")
         self.rect = self.image.get_rect()
         self.rect.center = startloc
-        self.speed = 6
+        self.speed = 4
         self._steps_since_sound = 0
-        self._steps_for_sound = 15
+        self._steps_for_sound = 30
 
     def update(self, keys):
         dir = Vector2(
@@ -28,8 +28,8 @@ class Player(pygame.sprite.Sprite):
             (keys[settings.key_map["move_down"]] - keys[settings.key_map["move_up"]])
             )
         if dir != Vector2(0, 0):
-            dir = dir.normalize() * self.speed
-            self._steps_since_sound += 1
+            dir = dir.normalize() * self.speed * (2 if keys[settings.key_map["run"]] else 1)
+            self._steps_since_sound += (3 if keys[settings.key_map["run"]] else 1)
         if self._steps_since_sound > self._steps_for_sound:
             load_asset("sound", "steps.ogg").play()
             self._steps_since_sound = 0
@@ -63,7 +63,7 @@ class App:
 
     def startup_sequence(self):
         pause(30, self.FPS)
-        load_asset("scene", "open1.scn").invert_colors().play(self)
+        #load_asset("scene", "open1.scn").invert_colors().play(self)
         load_asset("scene", "open2.scn").play(self)
         pause(30, self.FPS)
 
@@ -108,4 +108,4 @@ class App:
 
 if __name__ == "__main__":
     theApp = App()
-    theApp.on_execute(debug = True)
+    theApp.on_execute(debug = False)
