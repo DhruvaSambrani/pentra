@@ -24,8 +24,8 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, keys):
         dir = Vector2(
-            (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]), 
-            (keys[pygame.K_DOWN] - keys[pygame.K_UP])
+            (keys[settings.key_map["move_right"]] - keys[settings.key_map["move_left"]]), 
+            (keys[settings.key_map["move_down"]] - keys[settings.key_map["move_up"]])
             )
         if dir != Vector2(0, 0):
             dir = dir.normalize() * self.speed
@@ -71,9 +71,9 @@ class App:
         if event.type == pygame.QUIT:
             self._running = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
+            if event.key == settings.key_map["inv_right"]:
                 self.inventory.update(1)
-            if event.key == pygame.K_w:
+            if event.key == settings.key_map["inv_left"]:
                 self.inventory.update(-1)
 
     def on_loop(self):

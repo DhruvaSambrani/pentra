@@ -1,5 +1,14 @@
 {
     "ASSETS_PATH": "assets",
     "BG_COLOR": [17, 17, 17], 
-    "FG_COLOR": [242, 213, 207]
+    "FG_COLOR": [242, 213, 207],
+    "KEY_MAP": {
+        "move_left": "a",
+        "move_right": "d",
+        "move_up": "w",
+        "move_down": "s",
+        "inv_left": "h",
+        "inv_right": "k",
+        "inv_select": "j"
+    }
 }
