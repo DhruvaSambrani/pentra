@@ -1,9 +1,10 @@
-import math, os
+import os
 
 import pygame
 from pygame.locals import K_DOWN, K_LEFT, K_RIGHT, K_UP
 from pygame.math import Vector2
 
+from inventory import Item, Inventory
 from assets import load_asset
 from settings import settings
 from utils import pause
@@ -34,7 +35,7 @@ class Player(pygame.sprite.Sprite):
             self._steps_since_sound = 0
         self.rect.move_ip(*dir)
 
-    def draw(self, surface):
+    def render(self, surface):
         surface.blit(self.image, self.rect)
 
 
@@ -46,6 +47,7 @@ class App:
         self.player = Player((640, 400))
         pygame.font.init()
         self.font = pygame.font.Font("./assets/font/DancingScript.ttf", 30)
+        self.inventory = Inventory(5)
 
     def on_init(self):
         pygame.init()
@@ -68,13 +70,19 @@ class App:
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q:
+                self.inventory.update(1)
+            if event.key == pygame.K_w:
+                self.inventory.update(-1)
 
     def on_loop(self):
         self.player.update(pygame.key.get_pressed())
 
     def on_render(self):
         self._display_surf.fill(settings.bg_color)
-        self.player.draw(self._display_surf)
+        self.player.render(self._display_surf)
+        self.inventory.render(self._display_surf)
 
     def on_cleanup(self):
         pygame.mixer.music.stop()
