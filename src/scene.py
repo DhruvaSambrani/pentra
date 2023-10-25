@@ -81,7 +81,10 @@ class Scene:
                 )  # TODO: user defined
                 i += 1
             elif action.action == "print":
-                app._display_surf.blit(app.font.render(action.data, True, self.txt_col), [300, 250 + self.line_spacing * i])
+                app._display_surf.blit(
+                    app.font.render(action.data, True, self.txt_col),
+                    [300, 250 + self.line_spacing * i],
+                )
                 pygame.display.update()
                 i += 1
             elif action.action == "sound":

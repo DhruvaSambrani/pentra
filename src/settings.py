@@ -1,5 +1,7 @@
-import json, pygame
+import json
 from collections import namedtuple
+
+import pygame
 
 Settings = namedtuple("Settings", "assets palette key_map")
 

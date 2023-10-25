@@ -4,13 +4,14 @@ import pygame
 from pygame.locals import K_DOWN, K_LEFT, K_RIGHT, K_UP
 from pygame.math import Vector2
 
-from inventory import Item, Inventory
 from assets import load_asset
+from inventory import Inventory, Item
 from settings import settings
 from utils import pause
 
 # Center pygame window upon creation
-os.environ['SDL_VIDEO_CENTERED'] = '1'
+os.environ["SDL_VIDEO_CENTERED"] = "1"
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, startloc):
@@ -24,12 +25,19 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, keys):
         dir = Vector2(
-            (keys[settings.key_map["move_right"]] - keys[settings.key_map["move_left"]]), 
-            (keys[settings.key_map["move_down"]] - keys[settings.key_map["move_up"]])
-            )
+            (
+                keys[settings.key_map["move_right"]]
+                - keys[settings.key_map["move_left"]]
+            ),
+            (keys[settings.key_map["move_down"]] - keys[settings.key_map["move_up"]]),
+        )
         if dir != Vector2(0, 0):
-            dir = dir.normalize() * self.speed * (2 if keys[settings.key_map["run"]] else 1)
-            self._steps_since_sound += (3 if keys[settings.key_map["run"]] else 1)
+            dir = (
+                dir.normalize()
+                * self.speed
+                * (2 if keys[settings.key_map["run"]] else 1)
+            )
+            self._steps_since_sound += 3 if keys[settings.key_map["run"]] else 1
         if self._steps_since_sound > self._steps_for_sound:
             load_asset("sound", "steps.ogg").play()
             self._steps_since_sound = 0
@@ -63,7 +71,7 @@ class App:
 
     def startup_sequence(self):
         pause(30, self.FPS)
-        #load_asset("scene", "open1.scn").invert_colors().play(self)
+        # load_asset("scene", "open1.scn").invert_colors().play(self)
         load_asset("scene", "open2.scn").play(self)
         pause(30, self.FPS)
 
@@ -88,12 +96,13 @@ class App:
         pygame.mixer.music.stop()
         pygame.quit()
 
-    def on_execute(self, debug = False):
+    def on_execute(self, debug=False):
         if not self.on_init():
             self._running = False
 
         if self._running:
-            if not debug: self.startup_sequence()  # ONLY FOR DEV PURPOSE
+            if not debug:
+                self.startup_sequence()  # ONLY FOR DEV PURPOSE
             self.actual_init()
 
         while self._running:
@@ -108,4 +117,4 @@ class App:
 
 if __name__ == "__main__":
     theApp = App()
-    theApp.on_execute(debug = False)
+    theApp.on_execute(debug=False)
