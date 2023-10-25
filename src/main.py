@@ -1,6 +1,6 @@
 import pygame
 import math
-from utils import load_image, load_music, play_sound, pause
+from utils import load_image, play_music, play_sound, pause
 from utils import BG_COLOR, FG_COLOR
 from utils import Scene
 
@@ -58,15 +58,11 @@ class App:
 
     def startup_sequence(self, passthrough=False):
         if passthrough:
-            load_music("scary.mp3")
-            pygame.mixer.music.play(-1)
+            play_music("scary.mp3")
             return
-
-
-        scene = Scene("open1.scn", FG_COLOR, BG_COLOR)
-        scene.play(self)
-        scene = Scene("open2.scn", BG_COLOR, FG_COLOR)
-        scene.play(self)
+        pause(30, self.FPS)
+        Scene("open1.scn", FG_COLOR, BG_COLOR).play(self)
+        Scene("open2.scn", BG_COLOR, FG_COLOR).play(self)
         pause(30, self.FPS)
     
     def on_event(self, event):
