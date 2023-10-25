@@ -14,6 +14,7 @@
         "inv_left": "h",
         "inv_right": "k",
         "inv_select": "j",
+        "inv_info": "l",
         "run": "LSHIFT"
     }
 }

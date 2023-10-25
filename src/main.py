@@ -70,7 +70,7 @@ class App:
 
     def startup_sequence(self):
         pause(30, self.FPS)
-        # load_asset("scene", "open1.scn").invert_colors().play(self)
+        load_asset("scene", "open1.scn").invert_colors().play(self)
         load_asset("scene", "open2.scn").play(self)
         pause(30, self.FPS)
 
@@ -82,6 +82,8 @@ class App:
                 self.inventory.update(1)
             if event.key == settings.key_map["inv_left"]:
                 self.inventory.update(-1)
+            if event.key == settings.key_map["inv_info"]:
+                self.inventory.show_info = not self.inventory.show_info
 
     def on_loop(self):
         self.player.update(pygame.key.get_pressed())
@@ -116,4 +118,4 @@ class App:
 
 if __name__ == "__main__":
     theApp = App()
-    theApp.on_execute(debug=False)
+    theApp.on_execute(debug=True)
