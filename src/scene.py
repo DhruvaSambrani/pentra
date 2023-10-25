@@ -6,8 +6,31 @@ import assets
 from utils import pause
 
 
+### Adapted from: https://stackoverflow.com/questions/64042648/how-do-i-blit-text-letter-by-letter-in-pygame-like-in-those-retro-rpg-games
+def generate_letters(word, pos, font, txt_col):
+    
+    surfaces = []
+    positions  = []
+    previousWidth = 0
+
+    for i in range(len(word)):
+        surf = font.render(word[i], True, txt_col)
+        surfaces.append(surf)
+    for i in range(len(surfaces)):
+        previousWidth += surfaces[i-1].get_rect().width
+        positions.append([previousWidth + pos[0], pos[1]])
+    return surfaces, positions
+
+def type_text(line, pos, app, txt_col):
+     letters, positions = generate_letters(line, pos, app.font, txt_col)
+     for i in range(len(letters)):
+        app._display_surf.blit(letters[i], (positions[i][0], positions[i][1])) 
+        pause(1, app.FPS)
+        pygame.display.update()
+###
+
 class Scene:
-    def __init__(self, filepath, bg_col, fg_col, line_spacing=30):
+    def __init__(self, filepath, bg_col, fg_col, line_spacing=40):
         self.txt_col = fg_col
         self.bg_col = bg_col
         self.line_spacing = line_spacing
@@ -28,11 +51,7 @@ class Scene:
         for line in self.file.readlines():
             data = re.findall(r'"(.+?)"', line)[0]
             if line[0] == ">":
-                app._display_surf.blit(
-                    app.font.render(data, True, self.txt_col),
-                    (250, 330 + self.line_spacing * i),
-                )
-                pygame.display.update()
+                type_text(data, [300, 250 + self.line_spacing * i], app, self.txt_col)
                 i += 1
             elif line[0] == "-":
                 if ".ogg" in data:

@@ -1,4 +1,4 @@
-import math
+import math, os
 
 import pygame
 from pygame.locals import K_DOWN, K_LEFT, K_RIGHT, K_UP
@@ -7,6 +7,8 @@ from assets import load_asset
 from settings import settings
 from utils import pause
 
+# Center pygame window upon creation
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, startloc):
@@ -49,7 +51,7 @@ class App:
         self.size = self.weight, self.height = 1280, 800
         self.player = Player((640, 400))
         pygame.font.init()
-        self.font = pygame.font.SysFont("Verdana", 30)
+        self.font = pygame.font.Font("./assets/font/DancingScript.ttf", 30)
 
     def on_init(self):
         pygame.init()
@@ -57,6 +59,7 @@ class App:
             self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
         )
         self.FPS = pygame.time.Clock()
+        return True
 
     def actual_init(self):
         self._display_surf.fill(settings.bg_color)
