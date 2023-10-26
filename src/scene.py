@@ -2,9 +2,9 @@ import argparse
 import shlex
 
 import pygame
+from utils import pause
 
 import assets
-from utils import pause
 
 
 # Adapted from: https://stackoverflow.com/questions/64042648/how-do-i-blit-text-letter-by-letter-in-pygame-like-in-those-retro-rpg-games
@@ -30,13 +30,20 @@ def type_text(line, pos, app, txt_col):
         pygame.display.update()
 
 
-###
-
-
 def _build_scn_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "action", choices=["type", "print", "sound", "music", "pause", "manipulate"]
+        "action",
+        choices=[
+            "type",
+            "print",
+            "sound",
+            "music",
+            "pause",
+            "manipulate",
+            "clear",
+            "load_scene",
+        ],
     )
     parser.add_argument("data")
     # print
@@ -47,48 +54,73 @@ def _build_scn_parser():
     return parser
 
 
+def _build_meta_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("fgcolor")
+    parser.add_argument("bgcolor")
+    parser.add_argument("--blocking", action="store_true")
+    return parser
+
+
 class Scene:
-    def __init__(self, filepath, bg_col, fg_col, line_spacing=40):
-        self.txt_col = fg_col
-        self.bg_col = bg_col
+    def __init__(self, filepath, app, line_spacing=40):
         self.line_spacing = line_spacing
         self.file = open(filepath, "r")
+        self.state = -1
+        self.textline = 0
+        self._display_surf = pygame.display.set_mode(
+            app.size, pygame.HWSURFACE | pygame.DOUBLEBUF
+        )
         self._parse()
 
     def _parse(self):
         parser = _build_scn_parser()
         self.actions = []
-        for line in self.file.readlines():
+        lines = self.file.readlines()
+        meta_line = _build_meta_parser().parse_args(shlex.split(lines[0]))
+        self.blocking = meta_line.blocking
+        self.fgcolor = meta_line.fgcolor
+        self.bgcolor = meta_line.bgcolor
+        for line in lines[1:]:
             self.actions.append(parser.parse_args(shlex.split(line)))
+        self._display_surf.fill(assets.load_asset("color", self.bgcolor))
 
-    def invert_colors(self):
-        self.bg_col, self.txt_col = self.txt_col, self.bg_col
+    def render(self, app):
+        app._display_surf.blit(self._display_surf, (0, 0))
+
+    def next(self, app):
+        if len(self.actions) < 1:
+            return None
+        action = self.actions.pop(0)
+        if action.action == "type":
+            type_text(
+                action.data,
+                [300, 250 + self.line_spacing * self.textline],
+                app,
+                assets.load_asset("color", self.fgcolor),
+            )  # TODO: user defined pos, font
+            self.textline += 1
+        elif action.action == "print":
+            self._display_surf.blit(
+                app.font.render(
+                    action.data,
+                    True,
+                    assets.load_asset("color", self.fgcolor),
+                ),
+                [300, 250 + self.line_spacing * self.textline],
+            )
+            pygame.display.update()
+            self.textline += 1
+        elif action.action == "sound":
+            assets.load_asset("sound", action.data).play()
+        elif action.action == "music":
+            assets.play_music(action.data, action.r)
+        elif action.action == "pause":
+            action.data = int(action.data) - 1
+            if action.data != 0:
+                self.actions.insert(0, action)
+        elif action.action == "clear":
+            self._display_surf.fill(self.bgcolor)
+        elif action.action == "load_scene":
+            return assets.load_asset("scene", action.data, app)
         return self
-
-    def set_colors(self, b, t):
-        self.bg_col, self.txt_col = b, t
-        return self
-
-    def play(self, app):
-        app._display_surf.fill(self.bg_col)
-        pygame.display.update()
-        i = 0
-        for action in self.actions:
-            if action.action == "type":
-                type_text(
-                    action.data, [300, 250 + self.line_spacing * i], app, self.txt_col
-                )  # TODO: user defined
-                i += 1
-            elif action.action == "print":
-                app._display_surf.blit(
-                    app.font.render(action.data, True, self.txt_col),
-                    [300, 250 + self.line_spacing * i],
-                )
-                pygame.display.update()
-                i += 1
-            elif action.action == "sound":
-                assets.load_asset("sound", action.data).play()
-            elif action.action == "music":
-                assets.play_music(action.data, action.r)
-            elif action.action == "pause":
-                pause(int(action.data), app.FPS)

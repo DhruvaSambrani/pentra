@@ -1,3 +1,4 @@
+PEACH BLACK --blocking
 music "scary.mp3" -r -1
 pause 60
 print "Wha... What just happened???"

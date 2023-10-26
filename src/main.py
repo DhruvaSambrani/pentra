@@ -6,7 +6,6 @@ from pygame.math import Vector2
 from assets import load_asset
 from inventory import Inventory
 from settings import settings
-from utils import pause
 
 # Center pygame window upon creation
 os.environ["SDL_VIDEO_CENTERED"] = "1"
@@ -55,6 +54,7 @@ class App:
         pygame.font.init()
         self.font = pygame.font.Font("./assets/font/DancingScript.ttf", 30)
         self.inventory = Inventory(5)
+        self.current_scene = None
 
     def on_init(self):
         pygame.init()
@@ -62,21 +62,19 @@ class App:
             self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
         )
         self.FPS = pygame.time.Clock()
-        return True
-
-    def actual_init(self):
         self._display_surf.fill(settings.palette["BLACK"])
         self._running = True
-
-    def startup_sequence(self):
-        pause(30, self.FPS)
-        load_asset("scene", "open1.scn").invert_colors().play(self)
-        load_asset("scene", "open2.scn").play(self)
-        pause(30, self.FPS)
+        self.current_scene = load_asset("scene", "open1.scn", self)
 
     def on_event(self, event):
+        # handle global events (such as quit or other)
         if event.type == pygame.QUIT:
             self._running = False
+
+        if self.current_scene and self.current_scene.blocking:
+            return
+
+        # handle game specific events (player/inventory movement)
         if event.type == pygame.KEYDOWN:
             if event.key == settings.key_map["inv_right"]:
                 self.inventory.update(1)
@@ -86,9 +84,17 @@ class App:
                 self.inventory.show_info = not self.inventory.show_info
 
     def on_loop(self):
+        if self.current_scene is not None:
+            self.next_scene = self.current_scene.next(self)
+            if self.current_scene.blocking:
+                return
         self.player.update(pygame.key.get_pressed())
 
     def on_render(self):
+        if self.current_scene is not None:
+            self.current_scene.render(self)
+            if self.current_scene.blocking:
+                return
         self._display_surf.fill(settings.palette["BLACK"])
         self.player.render(self._display_surf)
         self.inventory.render(self._display_surf)
@@ -98,14 +104,7 @@ class App:
         pygame.quit()
 
     def on_execute(self, debug=False):
-        if not self.on_init():
-            self._running = False
-
-        if self._running:
-            if not debug:
-                self.startup_sequence()  # ONLY FOR DEV PURPOSE
-            self.actual_init()
-
+        self.on_init()
         while self._running:
             for event in pygame.event.get():
                 self.on_event(event)
@@ -113,6 +112,7 @@ class App:
             self.on_render()
             pygame.display.update()
             self.FPS.tick(30)
+            self.current_scene = self.next_scene
         self.on_cleanup()
 
 

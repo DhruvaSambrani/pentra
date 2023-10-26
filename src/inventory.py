@@ -1,8 +1,8 @@
 import pygame
 from pygame.math import Vector2
 
-from settings import settings
 from assets import load_asset
+from settings import settings
 
 
 class Item:
@@ -10,7 +10,6 @@ class Item:
         self.name = "Guy"
         self.image = load_asset("sprite", file)
         self.tool_tip = "A guy. You found him lost in the building and you decided to take him under your wing.."
-        pass
 
 
 guy = Item("player.png")
