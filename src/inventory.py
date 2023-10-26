@@ -29,14 +29,16 @@ class Slot:
         # render description
         if show_tip and not (self.item is None):
             ft = pygame.font.SysFont("Verdana", 16).render(
-                self.item.name + "\n" + self.item.desc,
+                self.item.name.upper() + "\n" + self.item.desc,
                 True,
                 (0, 0, 0),
-                (100, 100, 100),
-                300,
+                None,
+                300
             )
-            desc_rect = ft.get_rect(topleft=item_rect.topright + Vector2(20, 0))
-            surface.blit(ft, desc_rect)
+            #get bounding rect from font render and then inflate and draw separately
+            desc_rect = ft.get_rect(topleft=item_rect.topright + Vector2(30, -13)).inflate(Vector2(10, 10))
+            pygame.draw.rect(surface, settings.palette["GREY1"], desc_rect, 0, 3)
+            surface.blit(ft, desc_rect.topleft + Vector2(8, 3))
 
 
 class Inventory:
