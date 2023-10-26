@@ -28,7 +28,10 @@ def type_text(line, pos, app, txt_col):
         app._display_surf.blit(letters[i], (positions[i][0], positions[i][1]))
         pause(1, app.FPS)
         pygame.display.update()
+
+
 ###
+
 
 def _build_scn_parser():
     parser = argparse.ArgumentParser()
