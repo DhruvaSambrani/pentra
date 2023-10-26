@@ -4,7 +4,7 @@ import pygame
 from pygame.math import Vector2
 
 from assets import load_asset
-from inventory import Inventory
+from inventory import Inventory, load_items
 from settings import settings
 from utils import pause
 
@@ -24,10 +24,7 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, keys):
         dir = Vector2(
-            (
-                keys[settings.key_map["move_right"]]
-                - keys[settings.key_map["move_left"]]
-            ),
+            (keys[settings.key_map["move_right"]] - keys[settings.key_map["move_left"]]),
             (keys[settings.key_map["move_down"]] - keys[settings.key_map["move_up"]]),
         )
         if dir != Vector2(0, 0):
@@ -54,7 +51,9 @@ class App:
         self.player = Player((640, 400))
         pygame.font.init()
         self.font = pygame.font.Font("./assets/font/DancingScript.ttf", 30)
-        self.inventory = Inventory(5)
+
+        self.items = load_items()
+        self.inventory = Inventory(5, self.items)
 
     def on_init(self):
         pygame.init()
