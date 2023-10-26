@@ -60,6 +60,10 @@ class App:
         self._display_surf = pygame.display.set_mode(
             self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
         )
+
+        self._hud_surf = pygame.Surface(self._display_surf.get_size(), flags=pygame.SRCALPHA)
+        self._hud_surf.set_alpha(200)
+        
         self.FPS = pygame.time.Clock()
         return True
 
@@ -89,8 +93,13 @@ class App:
 
     def on_render(self):
         self._display_surf.fill(settings.palette["BLACK"])
+        self._hud_surf.fill(settings.palette["TRANSPARENT"])
+
         self.player.render(self._display_surf)
-        self.inventory.render(self._display_surf)
+        self.inventory.render(self._hud_surf)
+        
+        # blend hud onto display surf
+        self._display_surf.blit(self._hud_surf, (0, 0))
 
     def on_cleanup(self):
         pygame.mixer.music.stop()
