@@ -4,7 +4,8 @@ import pygame
 from pygame.math import Vector2
 
 from assets import load_asset
-from inventory import Inventory, load_items
+from map import load_maps
+from inventory import Inventory, load_item
 from settings import settings
 
 # Center pygame window upon creation
@@ -54,11 +55,17 @@ class App:
         pygame.font.init()
         self.font = load_asset("font", "DancingScript.ttf", 30)
 
-        self.items = load_items()
-        self.inventory = Inventory(5, self.items)
+        self.MAP_ATLAS = load_maps()
+
+        self.current_map = self.MAP_ATLAS[0]
+        print(self.current_map.item_data)
+        self.inventory = Inventory(
+            8,
+            [load_item(item) for item in ["Camera", "Cross", "Battery", "Flashlight"]],
+        )
         self.current_scene = None
 
-    def on_init(self):
+    def on_init(self, debug):
         pygame.init()
         self._display_surf = pygame.display.set_mode(
             self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
@@ -72,7 +79,10 @@ class App:
         self.FPS = pygame.time.Clock()
         self._display_surf.fill(load_asset("color", "BLACK"))
         self._running = True
-        self.current_scene = load_asset("scene", "open1.scn", self)
+        self.current_scene = (
+            load_asset("scene", "open1.scn", self) if not debug else None
+        )
+        self.next_scene = None
 
     def on_event(self, event):
         # handle global events (such as quit or other)
@@ -105,6 +115,7 @@ class App:
             if self.current_scene.blocking:
                 return
         self._hud_surf.fill(load_asset("color", "TRANSPARENT"))
+        self.current_map.render(self._display_surf)
         self.player.render(self._display_surf)
         self.inventory.render(self._hud_surf)
         self._display_surf.blit(self._hud_surf, (0, 0))
@@ -114,7 +125,7 @@ class App:
         pygame.quit()
 
     def on_execute(self, debug=False):
-        self.on_init()
+        self.on_init(debug)
         while self._running:
             for event in pygame.event.get():
                 self.on_event(event)
