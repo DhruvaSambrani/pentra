@@ -72,7 +72,7 @@ class App:
         self.FPS = pygame.time.Clock()
         self._display_surf.fill(load_asset("color", "BLACK"))
         self._running = True
-        self.current_scene = load_asset("scene", "open2.scn", self)
+        self.current_scene = load_asset("scene", "open1.scn", self)
 
     def on_event(self, event):
         # handle global events (such as quit or other)
