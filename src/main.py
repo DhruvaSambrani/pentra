@@ -23,7 +23,10 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, keys):
         dir = Vector2(
-            (keys[settings.key_map["move_right"]] - keys[settings.key_map["move_left"]]),
+            (
+                keys[settings.key_map["move_right"]]
+                - keys[settings.key_map["move_left"]]
+            ),
             (keys[settings.key_map["move_down"]] - keys[settings.key_map["move_up"]]),
         )
         if dir != Vector2(0, 0):
@@ -61,9 +64,11 @@ class App:
             self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
         )
 
-        self._hud_surf = pygame.Surface(self._display_surf.get_size(), flags=pygame.SRCALPHA)
+        self._hud_surf = pygame.Surface(
+            self._display_surf.get_size(), flags=pygame.SRCALPHA
+        )
         self._hud_surf.set_alpha(200)
-        
+
         self.FPS = pygame.time.Clock()
         self._display_surf.fill(settings.palette["BLACK"])
         self._running = True
@@ -103,7 +108,7 @@ class App:
 
         self.player.render(self._display_surf)
         self.inventory.render(self._hud_surf)
-        
+
         # blend hud onto display surf
         self._display_surf.blit(self._hud_surf, (0, 0))
 

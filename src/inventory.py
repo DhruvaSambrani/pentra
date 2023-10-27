@@ -1,9 +1,12 @@
-import pygame, os, json
+import json
+import os
+
+import pygame
 from pygame.math import Vector2
 
 from assets import load_asset
 from settings import settings
-from assets import load_asset
+
 
 class Item:
     def __init__(self, name, desc, image):
@@ -11,8 +14,9 @@ class Item:
         self.desc = desc
         self.image = image
 
+
 class Slot:
-    def __init__(self, item = None):
+    def __init__(self, item=None):
         self.item = item
 
     def render(self, pos, border, surface, show_tip=False):
@@ -34,10 +38,12 @@ class Slot:
                 True,
                 settings.palette["VOID"],
                 None,
-                300
+                300,
             )
-            #get bounding rect from font render and then inflate and draw separately
-            desc_rect = ft.get_rect(topleft=item_rect.topright + Vector2(30, -13)).inflate(Vector2(10, 10))
+            # get bounding rect from font render and then inflate and draw separately
+            desc_rect = ft.get_rect(
+                topleft=item_rect.topright + Vector2(30, -13)
+            ).inflate(Vector2(10, 10))
             pygame.draw.rect(surface, settings.palette["GREY1"], desc_rect, 0, 3)
             surface.blit(ft, desc_rect.topleft + Vector2(8, 3))
 
@@ -58,6 +64,7 @@ class Inventory:
     def update(self, shift):
         self.active = (self.active + shift) % len(self.slots)
 
+
 def load_items():
     ITEM_PATH = os.path.join(settings.assets, "item")
 
@@ -66,7 +73,7 @@ def load_items():
         print(os.path.join(ITEM_PATH, file))
         data = json.load(open(os.path.join(ITEM_PATH, file)))
         image = load_asset("sprite", data["name"].lower() + ".png")
-        
+
         items.append(Item(data["name"], data["desc"], image))
 
     return items
