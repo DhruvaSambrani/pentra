@@ -58,16 +58,17 @@ def _build_meta_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("fgcolor")
     parser.add_argument("bgcolor")
+    parser.add_argument("-ls", "--line_spacing", type=int, default=40)
     parser.add_argument("--blocking", action="store_true")
     return parser
 
 
 class Scene:
-    def __init__(self, filepath, app, line_spacing=40):
-        self.line_spacing = line_spacing
+    def __init__(self, filepath, app):
         self.file = open(filepath, "r")
         self.state = -1
         self.textline = 0
+        self.lastline = (0, 0)
         self._display_surf = pygame.Surface(
             app._display_surf.get_size(), flags=pygame.SRCALPHA
         )
@@ -82,6 +83,7 @@ class Scene:
         self.blocking = meta_line.blocking
         self.fgcolor = meta_line.fgcolor
         self.bgcolor = meta_line.bgcolor
+        self.line_spacing = meta_line.line_spacing
         for line in lines[1:]:
             self.actions.append(parser.parse_args(shlex.split(line)))
         self._display_surf.fill(assets.load_asset("color", self.bgcolor))
@@ -103,15 +105,22 @@ class Scene:
             )  # TODO: user defined pos, font
             self.textline += 1
         elif action.action == "print" or action.action == "type":
+            font = assets.load_asset("font", action.f) if action.f else app.font
+            if action.l:
+                x, y = action.l.split("x")
+                pos = (int(x), int(y))
+            else:
+                pos = (self.lastline[0], self.lastline[1] + self.line_spacing)
+
             self._display_surf.blit(
-                app.font.render(
+                font.render(
                     action.data,
                     True,
                     assets.load_asset("color", self.fgcolor),
                 ),
-                [300, 250 + self.line_spacing * self.textline],
+                pos,
             )
-            self.textline += 1
+            self.lastline = pos
         elif action.action == "sound":
             assets.load_asset("sound", action.data).play()
         elif action.action == "music":
