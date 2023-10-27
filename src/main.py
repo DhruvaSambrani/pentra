@@ -4,7 +4,8 @@ import pygame
 from pygame.math import Vector2
 
 from assets import load_asset
-from inventory import Inventory, load_items
+from map import load_maps
+from inventory import Inventory, load_item
 from settings import settings
 
 # Center pygame window upon creation
@@ -54,8 +55,14 @@ class App:
         pygame.font.init()
         self.font = pygame.font.Font("./assets/font/DancingScript.ttf", 30)
 
-        self.items = load_items()
-        self.inventory = Inventory(7, self.items)
+        self.MAP_ATLAS = load_maps()
+
+        self.current_map = self.MAP_ATLAS[0]
+        print(self.current_map.item_data)
+        self.inventory = Inventory(
+            8,
+            [load_item(item) for item in ["Camera", "Cross", "Battery", "Flashlight"]],
+        )
         self.current_scene = None
 
     def on_init(self, debug):
@@ -108,6 +115,8 @@ class App:
             if self.current_scene.blocking:
                 return
         self._hud_surf.fill(settings.palette["TRANSPARENT"])
+
+        self.current_map.render(self._display_surf)
         self.player.render(self._display_surf)
         self.inventory.render(self._hud_surf)
         self._display_surf.blit(self._hud_surf, (0, 0))

@@ -1,0 +1,13 @@
+{
+    "name": "Test",
+    "items_on_load": {
+        "Battery": [
+            500,
+            500
+        ],
+        "Flashlight": [
+            100,
+            100
+        ]
+    }
+}
