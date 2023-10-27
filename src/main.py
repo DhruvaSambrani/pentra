@@ -72,7 +72,9 @@ class App:
         self.FPS = pygame.time.Clock()
         self._display_surf.fill(settings.palette["BLACK"])
         self._running = True
-        self.current_scene = load_asset("scene", "open1.scn", self) if not debug else None
+        self.current_scene = (
+            load_asset("scene", "open1.scn", self) if not debug else None
+        )
         self.next_scene = None
 
     def on_event(self, event):
@@ -114,7 +116,7 @@ class App:
         pygame.mixer.music.stop()
         pygame.quit()
 
-    def on_execute(self, debug = False):
+    def on_execute(self, debug=False):
         self.on_init(debug)
         while self._running:
             for event in pygame.event.get():

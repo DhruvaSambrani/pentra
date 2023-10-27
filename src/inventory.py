@@ -16,7 +16,7 @@ class Item:
 
 
 class Slot:
-    def __init__(self, item=None, quantity = 1):
+    def __init__(self, item=None, quantity=1):
         self.item = item
         self.quantity = quantity
 
@@ -54,7 +54,9 @@ class Slot:
 
 class Inventory:
     def __init__(self, num_slots, items):
-        self.slots = [Slot(item) for item in items] + [Slot() for _ in range(num_slots - len(items))]
+        self.slots = [Slot(item) for item in items] + [
+            Slot() for _ in range(num_slots - len(items))
+        ]
         self.active = 0
         self.show_info = False
 
