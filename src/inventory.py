@@ -43,7 +43,7 @@ class Slot:
                 ft = pygame.font.SysFont("Verdana", 16).render(
                     self.item.name.upper() + qt_label + "\n" + self.item.desc,
                     True,
-                    settings.palette["VOID"],
+                    settings.palette["WHITE"],
                     None,
                     300,
                 )
