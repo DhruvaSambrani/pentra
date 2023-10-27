@@ -16,8 +16,9 @@ class Item:
 
 
 class Slot:
-    def __init__(self, item=None):
+    def __init__(self, item=None, quantity = 1):
         self.item = item
+        self.quantity = quantity
 
     def render(self, pos, border, surface, show_tip=False):
         r = pygame.Rect(*pos, 60, 60)
@@ -34,14 +35,16 @@ class Slot:
 
             # render description
             if show_tip and not (self.item is None):
+                qt_label = "" if (self.quantity == 1) else f" (x{self.quantity})"
+
                 ft = pygame.font.SysFont("Verdana", 16).render(
-                    self.item.name.upper() + "\n" + self.item.desc,
+                    self.item.name.upper() + qt_label + "\n" + self.item.desc,
                     True,
                     settings.palette["VOID"],
                     None,
                     300,
                 )
-                # get bounding rect from font render and then inflate and draw separately
+                # get bounding rect from font render and then inflate and draw separatelyiitems
                 desc_rect = ft.get_rect(
                     topleft=item_rect.topright + Vector2(30, -13)
                 ).inflate(Vector2(10, 10))
@@ -51,7 +54,7 @@ class Slot:
 
 class Inventory:
     def __init__(self, num_slots, items):
-        self.slots = [Slot(item) for item in items] + [Slot() for i in range(num_slots - len(items))]
+        self.slots = [Slot(item) for item in items] + [Slot() for _ in range(num_slots - len(items))]
         self.active = 0
         self.show_info = False
 
@@ -65,13 +68,30 @@ class Inventory:
     def update(self, shift):
         self.active = (self.active + shift) % len(self.slots)
 
+    def get_items(self):
+        return [slot.item for slot in self.slots if slot.item is not None]
+
+    def add_item(self, item):
+        is_full = True
+
+        for slot in self.slots:
+            if slot.item is item:
+                slot.quantity += 1
+            elif slot.item is None:
+                slot.item = item
+                is_full = False
+
+        return not is_full
+
+    def remove_item(self, slot):
+        self.slots[slot].item = None
+
 
 def load_items():
     ITEM_PATH = os.path.join(settings.assets, "item")
 
     items = []
     for file in os.listdir(ITEM_PATH):
-        print(os.path.join(ITEM_PATH, file))
         data = json.load(open(os.path.join(ITEM_PATH, file)))
         image = load_asset("sprite", data["name"].lower() + ".png")
 
