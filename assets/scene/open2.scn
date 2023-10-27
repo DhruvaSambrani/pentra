@@ -1,7 +1,7 @@
 PEACH TRANSPARENT
 music "scary.mp3" -r -1
 pause 60
-print "Wha... What just happened???"
+print "Wha... What just happened???" -l 300x200
 pause 90
 print "Did the lights go out?"
 pause 90
@@ -11,7 +11,7 @@ type "But what was that rumbling sound !?"
 pause "30"
 sound "bell.ogg"
 pause "60"
-type "Ahh it's midnight.."
+type "Ahh it's midnight.." -l 400x400
 pause "60"
 type "Since when is there a bell at IISER?"
 pause "90"

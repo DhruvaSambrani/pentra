@@ -52,7 +52,7 @@ class App:
         self.size = self.weight, self.height = 1280, 800
         self.player = Player((640, 400))
         pygame.font.init()
-        self.font = pygame.font.Font("./assets/font/DancingScript.ttf", 30)
+        self.font = load_asset("font", "DancingScript.ttf", 30)
 
         self.items = load_items()
         self.inventory = Inventory(5, self.items)
@@ -70,9 +70,9 @@ class App:
         self._hud_surf.set_alpha(200)
 
         self.FPS = pygame.time.Clock()
-        self._display_surf.fill(settings.palette["BLACK"])
+        self._display_surf.fill(load_asset("color", "BLACK"))
         self._running = True
-        self.current_scene = load_asset("scene", "open1.scn", self)
+        self.current_scene = load_asset("scene", "open2.scn", self)
 
     def on_event(self, event):
         # handle global events (such as quit or other)
@@ -104,7 +104,7 @@ class App:
             self.current_scene.render(self._display_surf)
             if self.current_scene.blocking:
                 return
-        self._hud_surf.fill(settings.palette["TRANSPARENT"])
+        self._hud_surf.fill(load_asset("color", "TRANSPARENT"))
         self.player.render(self._display_surf)
         self.inventory.render(self._hud_surf)
         self._display_surf.blit(self._hud_surf, (0, 0))
