@@ -53,7 +53,7 @@ class App:
         self.size = self.weight, self.height = 1280, 800
         self.player = Player((640, 400))
         pygame.font.init()
-        self.font = pygame.font.Font("./assets/font/DancingScript.ttf", 30)
+        self.font = load_asset("font", "DancingScript.ttf", 30)
 
         self.MAP_ATLAS = load_maps()
 
@@ -77,7 +77,7 @@ class App:
         self._hud_surf.set_alpha(200)
 
         self.FPS = pygame.time.Clock()
-        self._display_surf.fill(settings.palette["BLACK"])
+        self._display_surf.fill(load_asset("color", "BLACK"))
         self._running = True
         self.current_scene = (
             load_asset("scene", "open1.scn", self) if not debug else None
@@ -114,8 +114,7 @@ class App:
             self.current_scene.render(self._display_surf)
             if self.current_scene.blocking:
                 return
-        self._hud_surf.fill(settings.palette["TRANSPARENT"])
-
+        self._hud_surf.fill(load_asset("color", "TRANSPARENT"))
         self.current_map.render(self._display_surf)
         self.player.render(self._display_surf)
         self.inventory.render(self._hud_surf)

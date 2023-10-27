@@ -1,7 +1,7 @@
 BLACK PEACH --blocking
 music "lofi.mp3" -r 1
 pause 60
-type "A nice Saturday night"
+type "A nice Saturday night" -l 300x200
 pause 60
 type "You are nearly done with your homework"
 pause 60

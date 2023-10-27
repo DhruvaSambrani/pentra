@@ -4,30 +4,6 @@ import shlex
 import pygame
 
 import assets
-from utils import pause
-
-
-# Adapted from: https://stackoverflow.com/questions/64042648/how-do-i-blit-text-letter-by-letter-in-pygame-like-in-those-retro-rpg-games
-def generate_letters(word, pos, font, txt_col):
-    surfaces = []
-    positions = []
-    previousWidth = 0
-
-    for i in range(len(word)):
-        surf = font.render(word[i], True, txt_col)
-        surfaces.append(surf)
-    for i in range(len(surfaces)):
-        previousWidth += surfaces[i - 1].get_rect().width
-        positions.append([previousWidth + pos[0], pos[1]])
-    return surfaces, positions
-
-
-def type_text(line, pos, app, txt_col):
-    letters, positions = generate_letters(line, pos, app.font, txt_col)
-    for i in range(len(letters)):
-        app._display_surf.blit(letters[i], (positions[i][0], positions[i][1]))
-        pause(1, app.FPS)
-        pygame.display.update()
 
 
 def _build_scn_parser():
@@ -46,9 +22,11 @@ def _build_scn_parser():
         ],
     )
     parser.add_argument("data")
-    # print
+    # print & type
     parser.add_argument("-l", required=False)
     parser.add_argument("-f", required=False)
+    # type
+    parser.add_argument("--v_dummy", required=False, default=-1)
     # music
     parser.add_argument("-r", type=int, required=False)
     return parser
@@ -58,16 +36,17 @@ def _build_meta_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("fgcolor")
     parser.add_argument("bgcolor")
+    parser.add_argument("-ls", "--line_spacing", type=int, default=40)
     parser.add_argument("--blocking", action="store_true")
     return parser
 
 
 class Scene:
-    def __init__(self, filepath, app, line_spacing=40):
-        self.line_spacing = line_spacing
+    def __init__(self, filepath, app):
         self.file = open(filepath, "r")
         self.state = -1
         self.textline = 0
+        self.lastline = (0, 0)
         self._display_surf = pygame.Surface(
             app._display_surf.get_size(), flags=pygame.SRCALPHA
         )
@@ -82,6 +61,7 @@ class Scene:
         self.blocking = meta_line.blocking
         self.fgcolor = meta_line.fgcolor
         self.bgcolor = meta_line.bgcolor
+        self.line_spacing = meta_line.line_spacing
         for line in lines[1:]:
             self.actions.append(parser.parse_args(shlex.split(line)))
         self._display_surf.fill(assets.load_asset("color", self.bgcolor))
@@ -93,25 +73,45 @@ class Scene:
         if len(self.actions) < 1:
             return None
         action = self.actions.pop(0)
-        if False and action.action == "type":
-            # currently broken TODO:fix
-            type_text(
-                action.data,
-                [300, 250 + self.line_spacing * self.textline],
-                app,
-                assets.load_asset("color", self.fgcolor),
-            )  # TODO: user defined pos, font
-            self.textline += 1
-        elif action.action == "print" or action.action == "type":
+        if action.action == "type":
+            font = assets.load_asset("font", action.f) if action.f else app.font
+            if action.l:
+                x, y = action.l.split("x")
+                pos = (int(x), int(y))
+            else:
+                pos = (self.lastline[0], self.lastline[1] + self.line_spacing)
+
+            letter_surf = font.render(
+                action.data[0], True, assets.load_asset("color", self.fgcolor)
+            )
+            self._display_surf.blit(letter_surf, pos)
+            if action.v_dummy == -1:
+                self.lastline = pos
+            if len(action.data) > 1:
+                action.v_dummy = 0
+                action.data = action.data[1:]
+                action.l = (
+                    str(pos[0] + letter_surf.get_rect().width) + "x" + str(pos[1])
+                )
+                self.actions.insert(0, action)
+
+        elif action.action == "print":
+            font = assets.load_asset("font", action.f) if action.f else app.font
+            if action.l:
+                x, y = action.l.split("x")
+                pos = (int(x), int(y))
+            else:
+                pos = (self.lastline[0], self.lastline[1] + self.line_spacing)
+
             self._display_surf.blit(
-                app.font.render(
+                font.render(
                     action.data,
                     True,
                     assets.load_asset("color", self.fgcolor),
                 ),
-                [300, 250 + self.line_spacing * self.textline],
+                pos,
             )
-            self.textline += 1
+            self.lastline = pos
         elif action.action == "sound":
             assets.load_asset("sound", action.data).play()
         elif action.action == "music":

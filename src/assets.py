@@ -6,12 +6,12 @@ import scene
 from settings import settings
 
 
-def load_asset(assettype, name, app_context=None):
+def load_asset(assettype, name, additional=None):
     filepath = os.path.join(settings.assets, assettype, name)
     if assettype in ["image", "sprite"]:
         return pygame.image.load(filepath)
     if assettype == "scene":
-        return scene.Scene(filepath, app_context)
+        return scene.Scene(filepath, additional)
     if assettype == "sound":
         return pygame.mixer.Sound(filepath)
     if assettype == "music":
@@ -19,6 +19,8 @@ def load_asset(assettype, name, app_context=None):
         return
     if assettype == "color":
         return settings.palette[name]
+    if assettype == "font":
+        return pygame.font.Font(filepath, additional)
     return filepath
 
 
