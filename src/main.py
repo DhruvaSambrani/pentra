@@ -99,17 +99,14 @@ class App:
         self.player.update(pygame.key.get_pressed())
 
     def on_render(self):
+        self._display_surf.fill(load_asset("color", "BLACK"))
         if self.current_scene is not None:
-            self.current_scene.render(self)
+            self.current_scene.render(self._display_surf)
             if self.current_scene.blocking:
                 return
-        self._display_surf.fill(settings.palette["BLACK"])
         self._hud_surf.fill(settings.palette["TRANSPARENT"])
-
         self.player.render(self._display_surf)
         self.inventory.render(self._hud_surf)
-
-        # blend hud onto display surf
         self._display_surf.blit(self._hud_surf, (0, 0))
 
     def on_cleanup(self):
@@ -123,7 +120,7 @@ class App:
                 self.on_event(event)
             self.on_loop()
             self.on_render()
-            pygame.display.update()
+            pygame.display.flip()
             self.FPS.tick(30)
             self.current_scene = self.next_scene
         self.on_cleanup()

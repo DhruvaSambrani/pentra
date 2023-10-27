@@ -2,9 +2,9 @@ import argparse
 import shlex
 
 import pygame
-from utils import pause
 
 import assets
+from utils import pause
 
 
 # Adapted from: https://stackoverflow.com/questions/64042648/how-do-i-blit-text-letter-by-letter-in-pygame-like-in-those-retro-rpg-games
@@ -68,9 +68,10 @@ class Scene:
         self.file = open(filepath, "r")
         self.state = -1
         self.textline = 0
-        self._display_surf = pygame.display.set_mode(
-            app.size, pygame.HWSURFACE | pygame.DOUBLEBUF
+        self._display_surf = pygame.Surface(
+            app._display_surf.get_size(), flags=pygame.SRCALPHA
         )
+        self._display_surf.set_alpha(255)
         self._parse()
 
     def _parse(self):
@@ -85,14 +86,15 @@ class Scene:
             self.actions.append(parser.parse_args(shlex.split(line)))
         self._display_surf.fill(assets.load_asset("color", self.bgcolor))
 
-    def render(self, app):
-        app._display_surf.blit(self._display_surf, (0, 0))
+    def render(self, main_surf):
+        main_surf.blit(self._display_surf, (0, 0))
 
     def next(self, app):
         if len(self.actions) < 1:
             return None
         action = self.actions.pop(0)
-        if action.action == "type":
+        if False and action.action == "type":
+            # currently broken TODO:fix
             type_text(
                 action.data,
                 [300, 250 + self.line_spacing * self.textline],
@@ -100,7 +102,7 @@ class Scene:
                 assets.load_asset("color", self.fgcolor),
             )  # TODO: user defined pos, font
             self.textline += 1
-        elif action.action == "print":
+        elif action.action == "print" or action.action == "type":
             self._display_surf.blit(
                 app.font.render(
                     action.data,
@@ -109,7 +111,6 @@ class Scene:
                 ),
                 [300, 250 + self.line_spacing * self.textline],
             )
-            pygame.display.update()
             self.textline += 1
         elif action.action == "sound":
             assets.load_asset("sound", action.data).play()
