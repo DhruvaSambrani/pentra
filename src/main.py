@@ -55,10 +55,10 @@ class App:
         self.font = pygame.font.Font("./assets/font/DancingScript.ttf", 30)
 
         self.items = load_items()
-        self.inventory = Inventory(5, self.items)
+        self.inventory = Inventory(7, self.items)
         self.current_scene = None
 
-    def on_init(self):
+    def on_init(self, debug):
         pygame.init()
         self._display_surf = pygame.display.set_mode(
             self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
@@ -72,7 +72,8 @@ class App:
         self.FPS = pygame.time.Clock()
         self._display_surf.fill(settings.palette["BLACK"])
         self._running = True
-        self.current_scene = load_asset("scene", "open1.scn", self)
+        self.current_scene = load_asset("scene", "open1.scn", self) if not debug else None
+        self.next_scene = None
 
     def on_event(self, event):
         # handle global events (such as quit or other)
@@ -113,8 +114,8 @@ class App:
         pygame.mixer.music.stop()
         pygame.quit()
 
-    def on_execute(self, debug=False):
-        self.on_init()
+    def on_execute(self, debug = False):
+        self.on_init(debug)
         while self._running:
             for event in pygame.event.get():
                 self.on_event(event)
@@ -128,4 +129,4 @@ class App:
 
 if __name__ == "__main__":
     theApp = App()
-    theApp.on_execute(debug=True)
+    theApp.on_execute(debug=False)

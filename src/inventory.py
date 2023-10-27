@@ -27,30 +27,31 @@ class Slot:
         pygame.draw.rect(surface, settings.palette["GREY2"], r, border, 3)
 
         # render item sprite
-        item_rect = self.item.image.get_rect()
-        item_rect.center = pos + Vector2(30, 30)
-        surface.blit(self.item.image, item_rect)
+        if not self.item is None:
+            item_rect = self.item.image.get_rect()
+            item_rect.center = pos + Vector2(30, 30)
+            surface.blit(self.item.image, item_rect)
 
-        # render description
-        if show_tip and not (self.item is None):
-            ft = pygame.font.SysFont("Verdana", 16).render(
-                self.item.name.upper() + "\n" + self.item.desc,
-                True,
-                settings.palette["VOID"],
-                None,
-                300,
-            )
-            # get bounding rect from font render and then inflate and draw separately
-            desc_rect = ft.get_rect(
-                topleft=item_rect.topright + Vector2(30, -13)
-            ).inflate(Vector2(10, 10))
-            pygame.draw.rect(surface, settings.palette["GREY1"], desc_rect, 0, 3)
-            surface.blit(ft, desc_rect.topleft + Vector2(8, 3))
+            # render description
+            if show_tip and not (self.item is None):
+                ft = pygame.font.SysFont("Verdana", 16).render(
+                    self.item.name.upper() + "\n" + self.item.desc,
+                    True,
+                    settings.palette["VOID"],
+                    None,
+                    300,
+                )
+                # get bounding rect from font render and then inflate and draw separately
+                desc_rect = ft.get_rect(
+                    topleft=item_rect.topright + Vector2(30, -13)
+                ).inflate(Vector2(10, 10))
+                pygame.draw.rect(surface, settings.palette["GREY1"], desc_rect, 0, 3)
+                surface.blit(ft, desc_rect.topleft + Vector2(8, 3))
 
 
 class Inventory:
     def __init__(self, num_slots, items):
-        self.slots = [Slot(items[i]) for i in range(num_slots)]
+        self.slots = [Slot(item) for item in items] + [Slot() for i in range(num_slots - len(items))]
         self.active = 0
         self.show_info = False
 
