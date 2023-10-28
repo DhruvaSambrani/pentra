@@ -58,7 +58,6 @@ class App:
         self.MAP_ATLAS = load_maps()
 
         self.current_map = self.MAP_ATLAS[0]
-        print(self.current_map.item_data)
         self.inventory = Inventory(
             8,
             [load_item(item) for item in ["Camera", "Cross", "Battery", "Flashlight"]],
@@ -100,6 +99,17 @@ class App:
                 self.inventory.update(-1)
             if event.key == settings.key_map["inv_info"]:
                 self.inventory.show_info = not self.inventory.show_info
+            if event.key == settings.key_map["drop_item"]:
+                item = self.inventory.drop_item()
+                if item is not None:
+                    self.current_map.place_item(item, Vector2(self.player.rect.center))
+            if event.key == settings.key_map["pick_item"]:
+                if not self.inventory.is_full():
+                    item = self.current_map.pickup_item(
+                        Vector2(self.player.rect.center)
+                    )
+                    if item is not None:
+                        self.inventory.add_item(item)
 
     def on_loop(self):
         if self.current_scene is not None:
