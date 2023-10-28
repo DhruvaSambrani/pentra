@@ -22,12 +22,9 @@ def _build_scn_parser():
         ],
     )
     parser.add_argument("data")
-    # print & type
     parser.add_argument("-l", required=False)
     parser.add_argument("-f", required=False)
-    # type
     parser.add_argument("--v_dummy", required=False, default=-1)
-    # music
     parser.add_argument("-r", type=int, required=False)
     return parser
 
@@ -44,8 +41,6 @@ def _build_meta_parser():
 class Scene:
     def __init__(self, filepath, app):
         self.file = open(filepath, "r")
-        self.state = -1
-        self.textline = 0
         self.lastline = (0, 0)
         self._display_surf = pygame.Surface(
             app._display_surf.get_size(), flags=pygame.SRCALPHA
