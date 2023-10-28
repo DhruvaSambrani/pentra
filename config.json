@@ -43,12 +43,12 @@
         "move_right": "d",
         "move_up": "w",
         "move_down": "s",
-        "inv_left": "h",
-        "inv_right": "k",
-        "inv_select": "j",
-        "inv_info": "l",
-        "drop_item": "m",
-        "pick_item": "n",
+        "inv_left": "UP",
+        "inv_right": "DOWN",
+        "inv_select": "LEFT",
+        "inv_info": "RIGHT",
+        "drop_item": "e",
+        "pick_item": "q",
         "run": "LSHIFT"
     }
 }

@@ -1,4 +1,5 @@
 {
     "name": "Camera",
-    "desc": "Seems like it is broken. I doubt I can use it without fixing it up first."
+    "desc": "Seems like it is broken. I doubt I can use it without fixing it up first.",
+    "collectable": true
 }

@@ -1,4 +1,5 @@
 {
     "name": "Flashlight",
-    "desc": "\"And then there was light.\""
+    "desc": "\"And then there was light.\"",
+    "collectable": true
 }

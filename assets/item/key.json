@@ -1,4 +1,5 @@
 {
     "name": "Key",
-    "desc": "A scratched up key. I wonder what this opens..."
+    "desc": "A scratched up key. I wonder what this opens...",
+    "collectable": true
 }
