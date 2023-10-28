@@ -1,7 +1,9 @@
+import json
 import os
 
 import pygame
 
+import map
 import scene
 from settings import settings
 
@@ -21,7 +23,15 @@ def load_asset(assettype, name, additional=None):
         return settings.palette[name]
     if assettype == "font":
         return pygame.font.Font(filepath, additional)
+    if assettype == "map":
+        meta = json.load(open(os.path.join(filepath, "meta.json")))
+        map_surf = pygame.image.load(os.path.join(filepath, "map.png"))
+        return map.Map(map_surf, meta)
     return filepath
+
+
+def list_assets(assettype):
+    return os.listdir(os.path.join(settings.assets, assettype))
 
 
 def play_music(file_name, repeat=-1):

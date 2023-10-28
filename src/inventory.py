@@ -4,7 +4,7 @@ import os
 import pygame
 from pygame.math import Vector2
 
-from assets import load_asset
+import assets
 from settings import settings
 
 
@@ -47,7 +47,7 @@ class Slot:
                     None,
                     300,
                 )
-                # get bounding rect from font render and then inflate and draw separatelyiitems
+                # get bounding rect from font render and then inflate and draw separately items
                 desc_rect = ft.get_rect(topleft=r.topright + Vector2(20, 5)).inflate(
                     Vector2(10, 10)
                 )
@@ -119,7 +119,7 @@ def load_item(file):
     ITEM_PATH = os.path.join(settings.assets, "item")
 
     data = json.load(open(os.path.join(ITEM_PATH, file + ".json")))
-    image = load_asset("sprite", data["name"].lower() + ".png")
+    image = assets.load_asset("sprite", data["name"].lower() + ".png")
 
     return Item(data["name"], data["desc"], image)
 

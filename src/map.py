@@ -1,16 +1,29 @@
-import json
-import os
-
+import pygame
 from pygame.math import Vector2
+from pygame.transform import average_color
+
+import assets
+import player
 from inventory import load_item
-from settings import settings
 
 
 class Map:
-    def __init__(self, name, items_data):
-        self.name = name
+    def __init__(self, map_surf, meta):
+        self.name = meta["name"]
+        items_data = meta["items_on_load"]
+        self.default_loc = meta["default_loc"]
         self.items = [load_item(elt) for elt in items_data.keys()]
         self.item_locs = [Vector2(elt) for elt in items_data.values()]
+        self.map_surf = map_surf
+        pygame.draw.rect(
+            map_surf,
+            assets.load_asset("color", "WHITE"),
+            pygame.rect.Rect(0, 0, *map_surf.get_size()),
+            width=2,
+        )
+
+    def check_wall_collision(self, rect):
+        return pygame.Color(average_color(self.map_surf, rect)).grayscale()[0] > 10
 
     def pickup_item(self, pos):
         for i in range(len(self.items)):
@@ -23,18 +36,16 @@ class Map:
         self.items.append(item)
         self.item_locs.append(pos)
 
-    def render(self, surface):
+    def render(self, disp_surface, viewport):
+        temp_surface = self.map_surf.copy()
         for i in range(len(self.items)):
-            self.items[i].render(surface, self.item_locs[i])
+            self.items[i].render(temp_surface, self.item_locs[i])
+        player.get_player().render(temp_surface)
+        disp_surface.blit(temp_surface, (0, 0), viewport)
 
 
 def load_maps():
-    MAP_PATH = os.path.join(settings.assets, "map")
-
     maps = []
-    for file in os.listdir(MAP_PATH):
-        data = json.load(open(os.path.join(MAP_PATH, file)))
-
-        maps.append(Map(data["name"], data["items_on_load"]))
-
+    for file in assets.list_assets("map"):
+        maps.append(assets.load_asset("map", file))
     return maps
