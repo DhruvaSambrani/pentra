@@ -47,6 +47,8 @@
         "inv_right": "k",
         "inv_select": "j",
         "inv_info": "l",
+        "drop_item": "m",
+        "pick_item": "n",
         "run": "LSHIFT"
     }
 }

@@ -76,20 +76,43 @@ class Inventory:
     def get_items(self):
         return [slot.item for slot in self.slots if slot.item is not None]
 
+    def is_full(self):
+        items = [slot.item for slot in self.slots]
+        return not (None in items)
+
     def add_item(self, item):
-        is_full = True
+        # check if item is already in inventory to stack
+        idx = next(
+            (
+                i
+                for i, name in enumerate(
+                    [
+                        (slot.item.name if slot.item is not None else "")
+                        for slot in self.slots
+                    ]
+                )
+                if name == item.name
+            ),
+            -1,
+        )
 
-        for slot in self.slots:
-            if slot.item is item:
-                slot.quantity += 1
-            elif slot.item is None:
-                slot.item = item
-                is_full = False
+        if idx >= 0:
+            self.slots[idx].quantity += 1
+            return
+        else:
+            for i, slot in enumerate(self.slots):
+                if slot.item is None:
+                    slot.item = item
+                    self.active = i
+                    return
 
-        return not is_full
-
-    def remove_item(self, slot):
-        self.slots[slot].item = None
+    def drop_item(self):
+        item = self.slots[self.active].item
+        if self.slots[self.active].quantity > 1:
+            self.slots[self.active].quantity -= 1
+        else:
+            self.slots[self.active].item = None
+        return item
 
 
 def load_item(file):
