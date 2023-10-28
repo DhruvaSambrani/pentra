@@ -1,14 +1,37 @@
 {
     "name": "Test",
-    "items_on_load": {
-        "battery": [
-            500,
-            500
+    "items_on_load": [
+        [
+            "flashlight",
+            [
+                100,
+                100
+            ]
         ],
-        "flashlight": [
-            100,
-            100
+        [
+            "battery",
+            [
+                550,
+                550
+            ]
+        ],
+        [
+            "battery",
+            [
+                500,
+                540
+            ]
+        ],
+        [
+            "battery",
+            [
+                500,
+                580
+            ]
         ]
-    },
-    "default_loc": [200, 200]
+    ],
+    "default_loc": [
+        200,
+        200
+    ]
 }
