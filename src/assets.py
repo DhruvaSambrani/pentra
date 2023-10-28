@@ -1,4 +1,3 @@
-import json
 import os
 
 import pygame
@@ -24,9 +23,11 @@ def load_asset(assettype, name, additional=None):
     if assettype == "font":
         return pygame.font.Font(filepath, additional)
     if assettype == "map":
-        meta = json.load(open(os.path.join(filepath, "meta.json")))
-        map_surf = pygame.image.load(os.path.join(filepath, "map.png"))
-        return map.Map(map_surf, meta)
+        return map.Map(filepath)
+    if assettype == "script":
+        newlocal = {}
+        exec(open(filepath).read(), globals(), newlocal)
+        return newlocal["script_fun"](additional["app"], additional["player"])
     return filepath
 
 
