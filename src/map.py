@@ -12,8 +12,8 @@ class Map:
         self.name = meta["name"]
         items_data = meta["items_on_load"]
         self.default_loc = meta["default_loc"]
-        self.items = [load_item(elt) for elt in items_data.keys()]
-        self.item_locs = [Vector2(elt) for elt in items_data.values()]
+        self.items = [load_item(elt[0]) for elt in items_data]
+        self.item_locs = [Vector2(elt[1]) for elt in items_data]
         self.map_surf = map_surf
         pygame.draw.rect(
             map_surf,
@@ -27,7 +27,7 @@ class Map:
 
     def pickup_item(self, pos):
         for i in range(len(self.items)):
-            if (pos - self.item_locs[i]).magnitude() <= 50:
+            if (pos - self.item_locs[i]).magnitude() <= 35:
                 item, _ = self.items.pop(i), self.item_locs.pop(i)
                 return item
         return None
