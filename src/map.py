@@ -98,7 +98,9 @@ class Map:
         p = player.get_player()
         p.render(temp_surface)
         self.update_lighting(p.get_tile(self.shader_scale), 20, 0.85)
-        temp_surface.blit(self.light_surf, (0, 0))#, special_flags=pygame.BLEND_RGBA_MULT)
+        temp_surface.blit(
+            self.light_surf, (0, 0)
+        )  # , special_flags=pygame.BLEND_RGBA_MULT)
         disp_surface.blit(temp_surface, (0, 0), viewport)
 
 

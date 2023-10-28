@@ -1,5 +1,4 @@
 PEACH TRANSPARENT
-run_script test1.py
 music "scary.mp3" -r -1
 pause 60
 print "Wha... What just happened???" -l 300x200
@@ -18,4 +17,3 @@ type "Since when is there a bell at IISER?"
 pause "90"
 print "Something is weird. Where is my phone?"
 pause "60"
-run_script test1-close.py

@@ -52,10 +52,12 @@ class Player(pygame.sprite.Sprite):
     def get_all_tile(self, tilesize):
         tl = self.rect.topleft
         br = self.rect.bottomright
-        return list(itertools.product(
-            range(int(tl[0] / tilesize), round(br[0] / tilesize) + 1),
-            range(int(tl[1] / tilesize), round(br[1] / tilesize) + 1),
-        ))
+        return list(
+            itertools.product(
+                range(int(tl[0] / tilesize), round(br[0] / tilesize) + 1),
+                range(int(tl[1] / tilesize), round(br[1] / tilesize) + 1),
+            )
+        )
 
 
 _player = None
