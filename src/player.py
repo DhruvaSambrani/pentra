@@ -1,3 +1,5 @@
+import itertools
+
 import pygame
 from pygame.math import Vector2
 
@@ -31,7 +33,7 @@ class Player(pygame.sprite.Sprite):
             )
             self._steps_since_sound += 3 if keys[settings.key_map["run"]] else 1
         self.rect.move_ip(*dir)
-        if map.check_wall_collision(self.rect):
+        if map.check_wall_collision(self):
             self.rect.move_ip(*-dir)
         if self._steps_since_sound > self._steps_for_sound:
             load_asset("sound", "steps.ogg").play()
@@ -42,6 +44,18 @@ class Player(pygame.sprite.Sprite):
 
     def set_position(self, pos):
         self.rect.center = pos
+
+    def get_tile(self, tilesize):
+        x, y = self.rect.center
+        return (int(x / tilesize), int(y / tilesize))
+
+    def get_all_tile(self, tilesize):
+        tl = self.rect.topleft
+        br = self.rect.bottomright
+        return list(itertools.product(
+            range(int(tl[0] / tilesize), round(br[0] / tilesize) + 1),
+            range(int(tl[1] / tilesize), round(br[1] / tilesize) + 1),
+        ))
 
 
 _player = None
