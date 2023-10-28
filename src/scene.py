@@ -4,6 +4,7 @@ import shlex
 import pygame
 
 import assets
+import player
 
 
 def _build_scn_parser():
@@ -16,7 +17,7 @@ def _build_scn_parser():
             "sound",
             "music",
             "pause",
-            "manipulate",
+            "run_script",
             "clear",
             "load_scene",
         ],
@@ -119,4 +120,8 @@ class Scene:
             self._display_surf.fill(self.bgcolor)
         elif action.action == "load_scene":
             return assets.load_asset("scene", action.data, app)
+        elif action.action == "run_script":
+            assets.load_asset(
+                "script", action.data, {"app": app, "player": player.get_player()}
+            )
         return self

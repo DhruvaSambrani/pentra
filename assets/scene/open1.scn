@@ -1,17 +1,17 @@
 BLACK PEACH --blocking
+pause 30
 music "lofi.mp3" -r 1
-pause 60
 type "A nice Saturday night" -l 300x200
-pause 60
+pause 30
 type "You are nearly done with your homework"
-pause 60
+pause 30
 type "Its almost 12am"
-pause 60
+pause 30
 type "The weather is surprisingly nice. Not hot, but definitely not cold"
-pause 60
+pause 30
 type "The vending machine coffee is not GREAT, but you've had worse..."
-pause 60
+pause 30
 type "This music is pretty catchy hunh?"
 sound "earthquake.ogg"
-pause 60
+pause 30
 load_scene open2.scn

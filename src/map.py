@@ -1,3 +1,6 @@
+import json
+import os
+
 import pygame
 from pygame.math import Vector2
 from pygame.transform import average_color
@@ -8,7 +11,9 @@ from inventory import load_item
 
 
 class Map:
-    def __init__(self, map_surf, meta):
+    def __init__(self, folderpath):
+        meta = json.load(open(os.path.join(folderpath, "meta.json")))
+        map_surf = pygame.image.load(os.path.join(folderpath, "map.png"))
         self.name = meta["name"]
         items_data = meta["items_on_load"]
         self.default_loc = meta["default_loc"]

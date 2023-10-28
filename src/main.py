@@ -48,7 +48,7 @@ class App:
         self._display_surf.fill(load_asset("color", "BLACK"))
         self._running = True
         self.current_scene = (
-            load_asset("scene", "open1.scn", self) if not debug else None
+            load_asset("scene", "open2.scn", self) if not debug else None
         )
         self.change_map(self.MAP_ATLAS[0])
 
@@ -130,4 +130,4 @@ class App:
 
 if __name__ == "__main__":
     theApp = App()
-    theApp.on_execute(debug=True)
+    theApp.on_execute(debug=False)
