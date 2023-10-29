@@ -120,10 +120,9 @@ class Map:
             (0, 0),
             special_flags=pygame.BLEND_RGBA_MULT,
         )
-        v = Vector2(rvp.topleft) - Vector2(viewport.topleft)
-        x, y = v[0], v[1]
-
-        disp_surface.blit(temp_surface, (x, y))
+        disp_surface.blit(
+            temp_surface, Vector2(rvp.topleft) - Vector2(viewport.topleft)
+        )
 
 
 def load_maps():
