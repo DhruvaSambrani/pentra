@@ -103,11 +103,16 @@ class Map:
 
         rvp = pygame.rect.Rect(x1, y1, rvp_size, rvp_size)
 
-        temp_surface = self.map_surf.copy()
+        temp_surface = self.map_surf.subsurface(rvp).copy()
         for i in range(len(self.items)):
-            self.items[i].render(temp_surface, self.item_locs[i])
-        p.render(temp_surface)
-        temp_surface = temp_surface.subsurface(rvp)
+            if (
+                x1 < self.item_locs[i][0] < x1 + rvp_size
+                and y1 < self.item_locs[i][1] < y1 + rvp_size
+            ):
+                self.items[i].render(
+                    temp_surface, Vector2(self.item_locs[i]) - Vector2(rvp.topleft)
+                )
+        p.render(temp_surface, offset=-Vector2(rvp.topleft))
         self.update_lighting(p.get_tile(self.shader_scale), light_range, light_scale)
 
         temp_surface.blit(
