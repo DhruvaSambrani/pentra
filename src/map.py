@@ -3,7 +3,7 @@ import os
 
 import pygame
 from pygame.math import Vector2
-
+import random
 import assets
 import player
 from inventory import load_item
@@ -60,12 +60,13 @@ class Map:
 
     def update_lighting(self, start_tile, render_range, scale):
         def neighbors(tile):
-            return [
+            l = [
                 (tile[0] - 1, tile[1]),
                 (tile[0] + 1, tile[1]),
                 (tile[0], tile[1] - 1),
                 (tile[0], tile[1] + 1),
             ]
+            return l
 
         _list = [start_tile]
         _dict = {start_tile: 1}
@@ -73,23 +74,25 @@ class Map:
             for n in neighbors(_list[i]):
                 if n not in _dict.keys():
                     _list.append(n)
-                    if self._tile_not_in_bounds(n):
-                        _dict[n] = 0
-                    else:
-                        _dict[n] = (
+                if self._tile_not_in_bounds(n):
+                    _dict[n] = 0
+                    break
+                newval = (
                             _dict[_list[i]]
                             * scale
                             * (1 - self.shades.get_at(n)[0] / 255)
                         )
+                if _dict.get(n, -1) < newval:
+                    _dict[n] = newval
+
         new_surf = pygame.Surface(self.shades.get_size(), flags=pygame.SRCALPHA)
         new_surf.fill(assets.load_asset("color", "TRANSPARENT"))
         for pixel in _dict.keys():
             new_surf.set_at(
                 pixel,
-                [255, 255, 255, _dict[pixel] * 255],
+                [255, 255, 255, int(_dict[pixel] * 255)],
             )
-        s2x = pygame.transform.scale2x
-        self.light_surf = s2x(s2x(s2x(s2x(new_surf))))
+        self.light_surf = pygame.transform.scale_by(new_surf, self.shader_scale)
 
     def render(self, disp_surface, viewport):
         temp_surface = self.map_surf.copy()
@@ -99,7 +102,7 @@ class Map:
         p.render(temp_surface)
 
         temp_surface = temp_surface.subsurface(viewport)
-        self.update_lighting(p.get_tile(self.shader_scale), 20, 0.85)
+        self.update_lighting(p.get_tile(self.shader_scale), 20, 0.87)
 
         temp_surface.blit(
             self.light_surf.subsurface(viewport),
