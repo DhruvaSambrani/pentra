@@ -30,7 +30,7 @@ class App:
         )
         self.current_scene = None
         self.next_scene = None
-        self.viewport_track_speed = 0.02
+        self.viewport_track_speed = 0.05
         self.viewport = pygame.rect.Rect(0, 0, *self.size)
 
     def on_init(self, debug):
@@ -69,9 +69,9 @@ class App:
 
         # handle game specific events (player/inventory movement)
         if event.type == pygame.KEYDOWN:
-            if event.key == settings.key_map["inv_right"]:
+            if event.key == settings.key_map["inv_down"]:
                 self.inventory.update(1)
-            if event.key == settings.key_map["inv_left"]:
+            if event.key == settings.key_map["inv_up"]:
                 self.inventory.update(-1)
             if event.key == settings.key_map["inv_info"]:
                 self.inventory.show_info = not self.inventory.show_info
@@ -98,7 +98,9 @@ class App:
             (Vector2(player.get_player().rect.center) - Vector2(self.viewport.center))
             * self.viewport_track_speed
         )
+        self.viewport.clamp_ip(self.current_map.map_surf.get_rect())
         player.get_player().update(self.current_map, pygame.key.get_pressed())
+        print(self.FPS)
 
     def on_render(self):
         self._display_surf.fill(load_asset("color", "BLACK"))
@@ -123,11 +125,11 @@ class App:
             self.on_loop()
             self.on_render()
             pygame.display.flip()
-            self.FPS.tick(30)
+            self.FPS.tick(60)
             self.current_scene = self.next_scene
         self.on_cleanup()
 
 
 if __name__ == "__main__":
     theApp = App()
-    theApp.on_execute(debug=False)
+    theApp.on_execute(debug=True)
