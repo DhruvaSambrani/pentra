@@ -9,10 +9,11 @@ from settings import settings
 
 
 class Item:
-    def __init__(self, name, desc, image):
+    def __init__(self, name, desc, image, collectable):
         self.name = name
         self.desc = desc
         self.image = image
+        self.collectable = collectable
 
     def render(self, surface, pos):
         item_rect = self.image.get_rect()
@@ -121,7 +122,7 @@ def load_item(file):
     data = json.load(open(os.path.join(ITEM_PATH, file + ".json")))
     image = assets.load_asset("sprite", data["name"].lower() + ".png")
 
-    return Item(data["name"], data["desc"], image)
+    return Item(data["name"], data["desc"], image, data["collectable"])
 
 
 # def load_items():

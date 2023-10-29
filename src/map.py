@@ -48,9 +48,10 @@ class Map:
 
     def pickup_item(self, pos):
         for i in range(len(self.items)):
-            if (pos - self.item_locs[i]).magnitude() <= 35:
-                item, _ = self.items.pop(i), self.item_locs.pop(i)
-                return item
+            if self.items[i].collectable:
+                if (pos - self.item_locs[i]).magnitude() <= 35:
+                    item, _ = self.items.pop(i), self.item_locs.pop(i)
+                    return item
         return None
 
     def place_item(self, item, pos):
