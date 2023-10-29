@@ -52,6 +52,7 @@ class App:
 
     def on_init(self, debug):
         pygame.init()
+        pygame.transform.set_smoothscale_backend("SSE")
         self._display_surf = pygame.display.set_mode(
             self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
         )

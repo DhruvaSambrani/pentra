@@ -32,10 +32,10 @@ class Map:
 
     def _tile_not_in_bounds(self, tile):
         return (
-            tile[0] < 1
-            or tile[0] > self.shades.get_size()[0] - 1
-            or tile[1] < 1
-            or tile[1] > self.shades.get_size()[1] - 1
+            tile[0] < 2
+            or tile[0] > self.shades.get_size()[0] - 2
+            or tile[1] < 2
+            or tile[1] > self.shades.get_size()[1] - 2
         )
 
     def check_wall_collision(self, sprite):
@@ -77,11 +77,7 @@ class Map:
                 if self._tile_not_in_bounds(n):
                     _dict[n] = 0
                     break
-                newval = (
-                            _dict[_list[i]]
-                            * scale
-                            * (1 - self.shades.get_at(n)[0] / 255)
-                        )
+                newval = _dict[_list[i]] * scale * (1 - self.shades.get_at(n)[0] / 255)
                 if _dict.get(n, -1) < newval:
                     _dict[n] = newval
 
@@ -92,24 +88,38 @@ class Map:
                 pixel,
                 [255, 255, 255, int(_dict[pixel] * 255)],
             )
-        self.light_surf = pygame.transform.scale_by(new_surf, self.shader_scale)
+        self.light_surf = pygame.transform.smoothscale_by(new_surf, self.shader_scale)
 
     def render(self, disp_surface, viewport):
+        light_range, light_scale = 20, 0.85
+
+        p = player.get_player()
+        x, y = p.rect.center
+        x1 = x - (light_range * self.shader_scale)
+        y1 = y - (light_range * self.shader_scale)
+        rvp_size = (2 * light_range + 1) * self.shader_scale
+
+        x1 = max(0, min(x1, self.map_surf.get_size()[0] - rvp_size))
+        y1 = max(0, min(y1, self.map_surf.get_size()[1] - rvp_size))
+
+        rvp = pygame.rect.Rect(x1, y1, rvp_size, rvp_size)
+
         temp_surface = self.map_surf.copy()
         for i in range(len(self.items)):
             self.items[i].render(temp_surface, self.item_locs[i])
-        p = player.get_player()
         p.render(temp_surface)
-
-        temp_surface = temp_surface.subsurface(viewport)
-        self.update_lighting(p.get_tile(self.shader_scale), 20, 0.87)
+        temp_surface = temp_surface.subsurface(rvp)
+        self.update_lighting(p.get_tile(self.shader_scale), light_range, light_scale)
 
         temp_surface.blit(
-            self.light_surf.subsurface(viewport),
+            self.light_surf.subsurface(rvp),
             (0, 0),
             special_flags=pygame.BLEND_RGBA_MULT,
         )
-        disp_surface.blit(temp_surface, (0, 0))
+        v = Vector2(rvp.topleft) - Vector2(viewport.topleft)
+        x, y = v[0], v[1]
+
+        disp_surface.blit(temp_surface, (x, y))
 
 
 def load_maps():
