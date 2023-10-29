@@ -69,9 +69,9 @@ class App:
 
         # handle game specific events (player/inventory movement)
         if event.type == pygame.KEYDOWN:
-            if event.key == settings.key_map["inv_right"]:
+            if event.key == settings.key_map["inv_down"]:
                 self.inventory.update(1)
-            if event.key == settings.key_map["inv_left"]:
+            if event.key == settings.key_map["inv_up"]:
                 self.inventory.update(-1)
             if event.key == settings.key_map["inv_info"]:
                 self.inventory.show_info = not self.inventory.show_info

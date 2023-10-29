@@ -3,7 +3,6 @@ import os
 
 import pygame
 from pygame.math import Vector2
-from pygame.transform import average_color
 
 import assets
 import player
