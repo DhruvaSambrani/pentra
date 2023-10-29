@@ -82,13 +82,12 @@ class Map:
                     _dict[n] = newval
 
         new_surf = pygame.Surface(self.shades.get_size(), flags=pygame.SRCALPHA)
-        new_surf.fill(assets.load_asset("color", "TRANSPARENT"))
         for pixel in _dict.keys():
             new_surf.set_at(
                 pixel,
                 [255, 255, 255, int(_dict[pixel] * 255)],
             )
-        self.light_surf = pygame.transform.smoothscale_by(new_surf, self.shader_scale)
+        pygame.transform.smoothscale_by(new_surf, self.shader_scale, self.light_surf)
 
     def render(self, disp_surface, viewport):
         light_range, light_scale = 20, 0.85
