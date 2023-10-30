@@ -3,7 +3,6 @@ import os
 
 import pygame
 from pygame.math import Vector2
-import random
 import assets
 import player
 from inventory import load_item
@@ -52,7 +51,9 @@ class Map:
                 if (pos - self.item_locs[i]).magnitude() <= 35:
                     item, _ = self.items.pop(i), self.item_locs.pop(i)
                     return item
-        return None
+            else:
+                self.items[i].use()
+                return None
 
     def place_item(self, item, pos):
         self.items.append(item)
@@ -109,9 +110,7 @@ class Map:
                 x1 < self.item_locs[i][0] < x1 + rvp_size
                 and y1 < self.item_locs[i][1] < y1 + rvp_size
             ):
-                self.items[i].render(
-                    temp_surface, Vector2(self.item_locs[i]) - Vector2(rvp.topleft)
-                )
+                self.items[i].render(temp_surface, self.item_locs[i] - rvp.topleft)
         p.render(temp_surface, offset=-Vector2(rvp.topleft))
         self.update_lighting(p.get_tile(self.shader_scale), light_range, light_scale)
 

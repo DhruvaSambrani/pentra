@@ -9,16 +9,22 @@ from settings import settings
 
 
 class Item:
-    def __init__(self, name, desc, image, collectable):
+    def __init__(self, name, desc, image, collectable, one_shot):
         self.name = name
         self.desc = desc
         self.image = image
         self.collectable = collectable
+        self.one_shot = one_shot
 
     def render(self, surface, pos):
         item_rect = self.image.get_rect()
         item_rect.center = pos
         surface.blit(self.image, item_rect)
+
+    def use(self):
+        # return success value; for e.g. usage may only happen if certain conditions are met, so return False if cannot be used.
+        print(self.name)
+        return True
 
 
 class Slot:
@@ -74,6 +80,13 @@ class Inventory:
     def update(self, shift):
         self.active = (self.active + shift) % len(self.slots)
 
+    def get_item_slot(self, item_name):
+        for idx, slot in enumerate(self.slots):
+            if slot.item.name.lower() == item_name.lower():
+                return slot, idx
+
+        return (None, None)
+
     def get_items(self):
         return [slot.item for slot in self.slots if slot.item is not None]
 
@@ -122,7 +135,13 @@ def load_item(file):
     data = json.load(open(os.path.join(ITEM_PATH, file + ".json")))
     image = assets.load_asset("sprite", data["name"].lower() + ".png")
 
-    return Item(data["name"], data["desc"], image, data["collectable"])
+    return Item(
+        data["name"],
+        data["desc"],
+        image,
+        data.get("collectable", True),
+        data.get("one_shot", False),
+    )
 
 
 # def load_items():
