@@ -80,6 +80,13 @@ class Inventory:
     def update(self, shift):
         self.active = (self.active + shift) % len(self.slots)
 
+    def get_item_slot(self, item_name):
+        for idx, slot in enumerate(self.slots):
+            if slot.item.name.lower() == item_name.lower():
+                return slot, idx
+
+        return (None, None)
+
     def get_items(self):
         return [slot.item for slot in self.slots if slot.item is not None]
 
