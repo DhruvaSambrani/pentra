@@ -39,8 +39,10 @@ class Player(pygame.sprite.Sprite):
             load_asset("sound", "steps.ogg").play()
             self._steps_since_sound = 0
 
-    def render(self, surface):
-        surface.blit(self.image, self.rect)
+    def render(self, surface, offset):
+        r = self.rect.copy()
+        r.move_ip(*offset)
+        surface.blit(self.image, r)
 
     def set_position(self, pos):
         self.rect.center = pos

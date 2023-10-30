@@ -52,6 +52,7 @@ class App:
 
     def on_init(self, debug):
         pygame.init()
+        pygame.transform.set_smoothscale_backend("SSE")
         self._display_surf = pygame.display.set_mode(
             self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
         )
@@ -117,7 +118,7 @@ class App:
         )
         self.viewport.clamp_ip(self.current_map.map_surf.get_rect())
         player.get_player().update(self.current_map, pygame.key.get_pressed())
-        print(self.FPS)
+        print(self.FPS.get_fps())
 
     def on_render(self):
         self._display_surf.fill(load_asset("color", "BLACK"))
