@@ -67,7 +67,7 @@ class Scene:
 
     def next(self, app):
         if len(self.actions) < 1:
-            return None
+            return True
         action = self.actions.pop(0)
         if action.action == "type":
             font = assets.load_asset("font", action.f) if action.f else app.font
@@ -119,9 +119,9 @@ class Scene:
         elif action.action == "clear":
             self._display_surf.fill(self.bgcolor)
         elif action.action == "load_scene":
-            return assets.load_asset("scene", action.data, app)
+            app.current_scenes.append(assets.load_asset("scene", action.data, app))
         elif action.action == "run_script":
             assets.load_asset(
                 "script", action.data, {"app": app, "player": player.get_player()}
             )
-        return self
+        return False

@@ -45,8 +45,7 @@ class App:
             8,
             [load_item(item) for item in ["camera", "cross", "battery", "flashlight"]],
         )
-        self.current_scene = None
-        self.next_scene = None
+        self.current_scenes = []
         self.viewport_track_speed = 0.05
         self.viewport = pygame.rect.Rect(0, 0, *self.size)
 
@@ -65,9 +64,8 @@ class App:
         self.FPS = pygame.time.Clock()
         self._display_surf.fill(load_asset("color", "BLACK"))
         self._running = True
-        self.current_scene = (
-            load_asset("scene", "open1.scn", self) if not debug else None
-        )
+        if not debug:
+            self.current_scenes.append(load_asset("scene", "open1.scn", self))
         self.change_map(self.MAP_ATLAS[0])
 
     def change_map(self, newmap, loc=None):
@@ -82,8 +80,9 @@ class App:
         if event.type == pygame.QUIT:
             self._running = False
 
-        if self.current_scene and self.current_scene.blocking:
-            return
+        for current_scene in self.current_scenes:
+            if current_scene.blocking:
+                return
 
         # handle game specific events (player/inventory movement)
         if event.type == pygame.KEYDOWN:
@@ -108,24 +107,29 @@ class App:
                         self.inventory.add_item(item)
 
     def on_loop(self):
-        if self.current_scene is not None:
-            self.next_scene = self.current_scene.next(self)
-            if self.current_scene.blocking:
-                return
+        for i, current_scene in filter(
+            lambda iv: iv[1].blocking, enumerate(self.current_scenes)
+        ):
+            if current_scene.next(self):
+                self.current_scenes.pop(i)
+            return
+        for i, current_scene in enumerate(self.current_scenes):
+            if current_scene.next(self):
+                self.current_scenes.pop(i)
         self.viewport.move_ip(
             (Vector2(player.get_player().rect.center) - Vector2(self.viewport.center))
             * self.viewport_track_speed
         )
         self.viewport.clamp_ip(self.current_map.map_surf.get_rect())
         player.get_player().update(self.current_map, pygame.key.get_pressed())
-        print(self.FPS.get_fps())
 
     def on_render(self):
         self._display_surf.fill(load_asset("color", "BLACK"))
-        if self.current_scene is not None:
-            self.current_scene.render(self._display_surf)
-            if self.current_scene.blocking:
-                return
+        for current_scene in filter(lambda iv: iv.blocking, self.current_scenes):
+            current_scene.render(self._display_surf)
+            return
+        for current_scene in self.current_scenes:
+            current_scene.render(self._display_surf)
         self._hud_surf.fill(load_asset("color", "TRANSPARENT"))
         self.current_map.render(self._display_surf, self.viewport)
         self.inventory.render(self._hud_surf)
@@ -143,11 +147,11 @@ class App:
             self.on_loop()
             self.on_render()
             pygame.display.flip()
-            self.FPS.tick(60)
-            self.current_scene = self.next_scene
+            self.FPS.tick(30)
+            print(self.FPS.get_fps())
         self.on_cleanup()
 
 
 if __name__ == "__main__":
     theApp = App()
-    theApp.on_execute(debug=True)
+    theApp.on_execute(debug=False)
