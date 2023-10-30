@@ -1,5 +1,5 @@
 {
     "name": "Battery",
     "desc": "I can use these to charge up my device a bit..",
-    "collectable": true
+    "one_shot": true
 }

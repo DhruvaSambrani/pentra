@@ -48,7 +48,8 @@
         "inv_select": "LEFT",
         "inv_info": "RIGHT",
         "drop_item": "e",
-        "pick_item": "q",
+        "interact": "q",
+        "use_item": "z",
         "run": "LSHIFT"
     }
 }

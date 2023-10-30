@@ -98,13 +98,19 @@ class App:
                     self.current_map.place_item(
                         item, Vector2(player.get_player().rect.center)
                     )
-            if event.key == settings.key_map["pick_item"]:
+            if event.key == settings.key_map["interact"]:
                 if not self.inventory.is_full():
                     item = self.current_map.pickup_item(
                         Vector2(player.get_player().rect.center)
                     )
                     if item is not None:
                         self.inventory.add_item(item)
+            if event.key == settings.key_map["use_item"]:
+                item = self.inventory.slots[self.inventory.active].item
+                if item is not None:
+                    status = item.use()
+                    if status and item.one_shot:
+                        self.inventory.drop_item()
 
     def on_loop(self):
         for i, current_scene in filter(
@@ -148,7 +154,6 @@ class App:
             self.on_render()
             pygame.display.flip()
             self.FPS.tick(30)
-            print(self.FPS.get_fps())
         self.on_cleanup()
 
 
