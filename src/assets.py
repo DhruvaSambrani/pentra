@@ -12,7 +12,7 @@ def load_asset(assettype, name, additional=None):
     if assettype in ["image", "sprite"]:
         return pygame.image.load(filepath)
     if assettype == "scene":
-        return scene.Scene(filepath, additional)
+        return scene.Scriptable(filepath, additional)
     if assettype == "sound":
         return pygame.mixer.Sound(filepath)
     if assettype == "music":

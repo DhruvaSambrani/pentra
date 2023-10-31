@@ -39,7 +39,7 @@ def _build_meta_parser():
     return parser
 
 
-class Scene:
+class Scriptable:
     def __init__(self, filepath, app):
         self.file = open(filepath, "r")
         self.lastline = (0, 0)
