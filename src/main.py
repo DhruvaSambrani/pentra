@@ -5,7 +5,7 @@ from pygame.math import Vector2
 
 import player
 from assets import load_asset
-from inventory import Inventory, load_item
+from inventory import Inventory
 from map import load_maps
 from settings import settings
 
@@ -43,7 +43,10 @@ class App:
         self.current_map = None
         self.inventory = Inventory(
             8,
-            [load_item(item) for item in ["camera", "cross", "battery", "flashlight"]],
+            [
+                load_asset("item", elt)
+                for elt in ["camera", "cross", "battery", "flashlight"]
+            ],
         )
         self.current_scenes = []
         self.viewport_track_speed = 0.05

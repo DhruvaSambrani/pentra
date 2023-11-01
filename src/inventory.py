@@ -1,5 +1,4 @@
 import json
-import os
 
 import pygame
 from pygame.math import Vector2
@@ -9,13 +8,15 @@ from settings import settings
 
 
 class Item:
-    def __init__(self, name, desc, image, collectable, one_shot, has_scene):
-        self.name = name
-        self.desc = desc
-        self.image = image
-        self.collectable = collectable
-        self.one_shot = one_shot
-        self.has_scene = has_scene
+    def __init__(self, filepath):
+        data = json.load(open(filepath + ".json"))
+
+        self.name = data["name"]
+        self.desc = data["desc"]
+        self.image = assets.load_asset("sprite", data["name"].lower() + ".png")
+        self.collectable = data.get("collectable", True)
+        self.one_shot = data.get("one_shot", False)
+        self.has_scene = data.get("has_scene", False)
 
     def render(self, surface, pos):
         item_rect = self.image.get_rect()
@@ -24,7 +25,9 @@ class Item:
 
     def use(self, app):
         if self.has_scene:
-            app.current_scenes.append(assets.load_asset("scene", self.name+".scn", app))
+            app.current_scenes.append(
+                assets.load_asset("scene", self.name + ".scn", app)
+            )
         return self.has_scene
 
 
@@ -128,32 +131,3 @@ class Inventory:
         else:
             self.slots[self.active].item = None
         return item
-
-
-def load_item(file):
-    ITEM_PATH = os.path.join(settings.assets, "item")
-
-    data = json.load(open(os.path.join(ITEM_PATH, file + ".json")))
-    image = assets.load_asset("sprite", data["name"].lower() + ".png")
-
-    return Item(
-        data["name"],
-        data["desc"],
-        image,
-        data.get("collectable", True),
-        data.get("one_shot", False),
-        data.get("has_scene", False)
-    )
-
-
-# def load_items():
-#     ITEM_PATH = os.path.join(settings.assets, "item")
-
-#     items = []
-#     for file in os.listdir(ITEM_PATH):
-#         data = json.load(open(os.path.join(ITEM_PATH, file)))
-#         image = load_asset("sprite", data["name"].lower() + ".png")
-
-#         items.append(Item(data["name"], data["desc"], image))
-
-#     return items
