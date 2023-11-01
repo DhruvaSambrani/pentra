@@ -1,9 +1,0 @@
-WHITE TRANSPARENT
-run_script flashlight_on.py
-print "I can finally see things again!" -l 400x400
-pause 30
-clear 0
-pause 900
-run_script flashlight_off.py
-print "Fuck the battery died" -l 400x400
-pause 30

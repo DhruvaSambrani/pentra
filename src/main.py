@@ -13,30 +13,13 @@ from settings import settings
 os.environ["SDL_VIDEO_CENTERED"] = "1"
 
 
-def blurSurf(surface, amt):
-    """
-    Blur the given surface by the given 'amount'.  Only values 1 and greater
-    are valid.  Value 1 = no blur.
-    """
-    if amt < 1.0:
-        raise ValueError(
-            "Arg 'amt' must be greater than 1.0, passed in value is %s" % amt
-        )
-    scale = 1.0 / float(amt)
-    surf_size = surface.get_size()
-    scale_size = (int(surf_size[0] * scale), int(surf_size[1] * scale))
-    surf = pygame.transform.smoothscale(surface, scale_size)
-    surf = pygame.transform.smoothscale(surf, surf_size)
-    return surf
-
-
 class App:
     def __init__(self):
         self._running = True
         self._display_surf = None
         self.size = self.weight, self.height = 1280, 800
         pygame.font.init()
-        self.font = load_asset("font", "DancingScript.ttf", 30)
+        self.font = load_asset("font", "DancingScript.ttf", size=30)
 
         self.MAP_ATLAS = load_maps()
 
@@ -96,7 +79,7 @@ class App:
             if event.key == settings.key_map["inv_info"]:
                 self.inventory.show_info = not self.inventory.show_info
             if event.key == settings.key_map["drop_item"]:
-                item = self.inventory.drop_item()
+                item = self.inventory.drop_item(self, player.get_player())
                 if item is not None:
                     self.current_map.place_item(
                         item, Vector2(player.get_player().rect.center)
@@ -104,7 +87,7 @@ class App:
             if event.key == settings.key_map["interact"]:
                 if not self.inventory.is_full():
                     item = self.current_map.pickup_item(
-                        Vector2(player.get_player().rect.center)
+                        Vector2(player.get_player().rect.center), self
                     )
                     if item is not None:
                         self.inventory.add_item(item)
@@ -113,7 +96,7 @@ class App:
                 if item is not None:
                     status = item.use(self)
                     if status and item.one_shot:
-                        self.inventory.drop_item()
+                        self.inventory.drop_item(self, player.get_player())
 
     def on_loop(self):
         for i, current_scene in filter(
@@ -161,6 +144,21 @@ class App:
             pygame.display.flip()
             self.FPS.tick(30)
         self.on_cleanup()
+
+    def get_scene_id(self, name):
+        return next(
+            (
+                idx
+                for idx, scene in enumerate(self.current_scenes)
+                if scene.name.lower() == name.lower()
+            ),
+            -1,
+        )
+
+    def clear_alerts(self):
+        self.current_scenes = list(
+            filter(lambda scene: scene.name != "ALERT", self.current_scenes)
+        )
 
 
 if __name__ == "__main__":

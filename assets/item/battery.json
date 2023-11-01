@@ -1,5 +1,6 @@
 {
     "name": "Battery",
     "desc": "I can use these to charge up my device a bit..",
-    "one_shot": true
+    "one_shot": true,
+    "has_script": true
 }

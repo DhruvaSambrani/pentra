@@ -1,0 +1,3 @@
+WHITE TRANSPARENT -n ALERT
+print 'I can finally see things again!' -l 400x400
+pause 60

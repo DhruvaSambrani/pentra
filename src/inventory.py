@@ -3,8 +3,10 @@ import json
 import pygame
 from pygame.math import Vector2
 
+import player
 import assets
 from settings import settings
+import assets
 
 
 class Item:
@@ -16,7 +18,8 @@ class Item:
         self.image = assets.load_asset("sprite", data["name"].lower() + ".png")
         self.collectable = data.get("collectable", True)
         self.one_shot = data.get("one_shot", False)
-        self.has_scene = data.get("has_scene", False)
+        self.has_script = data.get("has_script", False)
+        self.state = data.get("state", {}) | {"active": False}
 
     def render(self, surface, pos):
         item_rect = self.image.get_rect()
@@ -24,11 +27,25 @@ class Item:
         surface.blit(self.image, item_rect)
 
     def use(self, app):
-        if self.has_scene:
-            app.current_scenes.append(
-                assets.load_asset("scene", self.name + ".scn", app)
+        if self.has_script:
+            status = assets.load_asset(
+                "script",
+                self.name + ".py",
+                app=app,
+                player=player.get_player(),
+                source="user",
             )
-        return self.has_scene
+        else:
+            print(self.name)
+            app.clear_alerts()
+            status = assets.load_asset(
+                "script",
+                "cannot_use.py",
+                app=app,
+                player=player.get_player(),
+                source="user",
+            )
+        return status
 
 
 class Slot:
@@ -86,7 +103,7 @@ class Inventory:
 
     def get_item_slot(self, item_name):
         for idx, slot in enumerate(self.slots):
-            if slot.item.name.lower() == item_name.lower():
+            if slot.item is not None and (slot.item.name.lower() == item_name.lower()):
                 return slot, idx
 
         return (None, None)
@@ -124,10 +141,21 @@ class Inventory:
                     self.active = i
                     return
 
-    def drop_item(self):
+    def drop_item(self, app, player):
         item = self.slots[self.active].item
-        if self.slots[self.active].quantity > 1:
-            self.slots[self.active].quantity -= 1
-        else:
-            self.slots[self.active].item = None
-        return item
+
+        if item is not None:
+            if not item.state["active"]:
+                if self.slots[self.active].quantity > 1:
+                    self.slots[self.active].quantity -= 1
+                else:
+                    self.slots[self.active].item = None
+
+                return item
+            else:
+                app.clear_alerts()
+                assets.load_asset(
+                    "script", "cannot_drop.py", app=app, player=player, source="user"
+                )
+
+        return None

@@ -13,12 +13,12 @@ def exists(assettype, name):
     return os.path.exists(filepath)
 
 
-def load_asset(assettype, name, additional=None):
-    filepath = os.path.join(settings.assets, assettype, name)
+def load_asset(assettype, name, **kwargs):
+    filepath = os.path.join(settings.assets, assettype, name).lower()
     if assettype in ["image", "sprite"]:
         return pygame.image.load(filepath)
     if assettype == "scene":
-        return scriptable.Scriptable(filepath, additional)
+        return scriptable.Scriptable(filepath, **kwargs)
     if assettype == "sound":
         return pygame.mixer.Sound(filepath)
     if assettype == "music":
@@ -27,17 +27,22 @@ def load_asset(assettype, name, additional=None):
     if assettype == "color":
         return settings.palette[name]
     if assettype == "font":
-        return pygame.font.Font(filepath, additional)
+        return pygame.font.Font(filepath, **kwargs)
     if assettype == "map":
         return map.Map(filepath)
     if assettype == "item":
         return inventory.Item(filepath)
     if assettype == "script":
         newlocal = {}
-        exec(open(filepath).read(), globals(), newlocal)
-        return newlocal["script_fun"](additional["app"], additional["player"])
+        try:
+            exec(open(filepath).read(), globals(), newlocal)
+            return newlocal["main"](**kwargs)
+        except Exception as e:
+            print("ERROR: while running external script ", name)
+            print(e)
+            exit(0)
     if assettype == "enemy":
-        return enemy.Enemy(filepath, additional)
+        return enemy.Enemy(filepath, **kwargs)
     return filepath
 
 
