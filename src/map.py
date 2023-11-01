@@ -45,7 +45,8 @@ class Map:
     def check_wall_collision(self, sprite):
         tiles = sprite.get_all_tile(self.shader_scale)
         for tile in tiles:
-            return self._tile_not_in_bounds(tile)
+            if self._tile_not_in_bounds(tile):
+                return True
         return sum([self.shades.get_at(tile)[0] for tile in tiles]) > 0
 
     def check_areas(self, app, point):
