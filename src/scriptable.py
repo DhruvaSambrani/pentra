@@ -117,7 +117,7 @@ class Scriptable:
             if action.data != 0:
                 self.actions.insert(0, action)
         elif action.action == "clear":
-            self._display_surf.fill(self.bgcolor)
+            self._display_surf.fill(assets.load_asset("color", self.bgcolor))
         elif action.action == "load_scene":
             app.current_scenes.append(assets.load_asset("scene", action.data, app))
         elif action.action == "run_script":
