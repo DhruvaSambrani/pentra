@@ -3,7 +3,7 @@ import os
 import pygame
 
 import map
-import scene
+import scriptable
 from settings import settings
 
 
@@ -12,7 +12,7 @@ def load_asset(assettype, name, additional=None):
     if assettype in ["image", "sprite"]:
         return pygame.image.load(filepath)
     if assettype == "scene":
-        return scene.Scriptable(filepath, additional)
+        return scriptable.Scriptable(filepath, additional)
     if assettype == "sound":
         return pygame.mixer.Sound(filepath)
     if assettype == "music":

@@ -6,6 +6,7 @@ from pygame.math import Vector2
 import assets
 import player
 from inventory import load_item
+from area import Area
 
 
 class Map:
@@ -28,13 +29,14 @@ class Map:
         self.light_surf = pygame.Surface(
             self.map_surf.get_size(), flags=pygame.SRCALPHA
         )
+        self.areas = list(map(lambda a: Area(a["name"], a["rect"]), meta["areas"]))
 
     def _tile_not_in_bounds(self, tile):
         return (
-            tile[0] < 2
-            or tile[0] > self.shades.get_size()[0] - 2
-            or tile[1] < 2
-            or tile[1] > self.shades.get_size()[1] - 2
+            tile[0] < 1
+            or tile[0] > self.shades.get_size()[0] - 1
+            or tile[1] < 1
+            or tile[1] > self.shades.get_size()[1] - 1
         )
 
     def check_wall_collision(self, sprite):
@@ -42,8 +44,11 @@ class Map:
         for tile in tiles:
             if self._tile_not_in_bounds(tile):
                 return True
-
         return sum([self.shades.get_at(tile)[0] for tile in tiles]) > 0
+
+    def check_areas(self, app, point):
+        for area in self.areas:
+            area.trigger(app, point)
 
     def pickup_item(self, pos):
         for i in range(len(self.items)):
@@ -106,10 +111,7 @@ class Map:
 
         temp_surface = self.map_surf.subsurface(rvp).copy()
         for i in range(len(self.items)):
-            if (
-                x1 < self.item_locs[i][0] < x1 + rvp_size
-                and y1 < self.item_locs[i][1] < y1 + rvp_size
-            ):
+            if rvp.collidepoint(self.item_locs[i]):
                 self.items[i].render(temp_surface, self.item_locs[i] - rvp.topleft)
         p.render(temp_surface, offset=-Vector2(rvp.topleft))
         self.update_lighting(p.get_tile(self.shader_scale), light_range, light_scale)
