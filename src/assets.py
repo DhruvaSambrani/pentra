@@ -3,6 +3,7 @@ import os
 import pygame
 
 import map
+import inventory
 import scriptable
 from settings import settings
 
@@ -24,6 +25,8 @@ def load_asset(assettype, name, additional=None):
         return pygame.font.Font(filepath, additional)
     if assettype == "map":
         return map.Map(filepath)
+    if assettype == "item":
+        return inventory.Item(filepath)
     if assettype == "script":
         newlocal = {}
         exec(open(filepath).read(), globals(), newlocal)

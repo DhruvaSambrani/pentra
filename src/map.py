@@ -5,7 +5,6 @@ import pygame
 from pygame.math import Vector2
 import assets
 import player
-from inventory import load_item
 from area import Area
 
 
@@ -18,7 +17,7 @@ class Map:
         self.shader_scale = meta["shader_scale"]
         self.light_range = meta.get("light_range", 20)
         self.light_scale = meta.get("light_scale", 0.85)
-        self.items = [load_item(elt[0]) for elt in items_data]
+        self.items = [assets.load_asset("item", elt[0]) for elt in items_data]
         self.item_locs = [Vector2(elt[1]) for elt in items_data]
         self.map_surf = pygame.image.load(os.path.join(folderpath, "map.png"))
         pygame.draw.rect(
@@ -31,7 +30,9 @@ class Map:
         self.light_surf = pygame.Surface(
             self.map_surf.get_size(), flags=pygame.SRCALPHA
         )
-        self.areas = list(map(lambda a: Area(a["name"], a["rect"]), meta["areas"]))
+        self.areas = list(
+            map(lambda a: Area(a["name"], a["rect"]), meta.get("areas", []))
+        )
 
     def _tile_not_in_bounds(self, tile):
         return (
@@ -68,13 +69,13 @@ class Map:
 
     def update_lighting(self, start_tile, render_range, scale):
         def neighbors(tile):
-            l = [
+            nbs = [
                 (tile[0] - 1, tile[1]),
                 (tile[0] + 1, tile[1]),
                 (tile[0], tile[1] - 1),
                 (tile[0], tile[1] + 1),
             ]
-            return l
+            return nbs
 
         _list = [start_tile]
         _dict = {start_tile: 1}
