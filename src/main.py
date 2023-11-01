@@ -128,6 +128,7 @@ class App:
         )
         self.viewport.clamp_ip(self.current_map.map_surf.get_rect())
         player.get_player().update(self.current_map, pygame.key.get_pressed())
+        self.current_map.check_areas(self, player.get_player().rect.center)
 
     def on_render(self):
         self._display_surf.fill(load_asset("color", "BLACK"))
