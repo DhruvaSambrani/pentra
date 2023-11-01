@@ -37,7 +37,7 @@ def load_asset(assettype, name, additional=None):
         exec(open(filepath).read(), globals(), newlocal)
         return newlocal["script_fun"](additional["app"], additional["player"])
     if assettype == "enemy":
-        return enemy.Enemy(filepath, additional[0], additional[1])
+        return enemy.Enemy(filepath, additional)
     return filepath
 
 

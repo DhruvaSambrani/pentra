@@ -1,5 +1,5 @@
 {
     "name": "Zombie",
     "sprite": "zombie.png",
-    "eyesight": 0.6
+    "eyesight": 0.7
 }
