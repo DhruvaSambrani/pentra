@@ -14,7 +14,7 @@ def exists(assettype, name):
 
 
 def load_asset(assettype, name, **kwargs):
-    filepath = os.path.join(settings.assets, assettype, name)
+    filepath = os.path.join(settings.assets, assettype, name).lower()
     if assettype in ["image", "sprite"]:
         return pygame.image.load(filepath)
     if assettype == "scene":
