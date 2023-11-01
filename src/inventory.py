@@ -32,7 +32,7 @@ class Item:
                 self.name + ".py",
                 app=app,
                 player=player.get_player(),
-                source="User",
+                source="user",
             )
         else:
             app.clear_alerts()
@@ -41,7 +41,7 @@ class Item:
                 "default.py",
                 app=app,
                 player=player.get_player(),
-                source="User",
+                source="user",
             )
         return status
 

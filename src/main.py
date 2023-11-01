@@ -148,7 +148,7 @@ class App:
             (
                 idx
                 for idx, scene in enumerate(self.current_scenes)
-                if scene.name == name
+                if scene.name.lower() == name.lower()
             ),
             -1,
         )

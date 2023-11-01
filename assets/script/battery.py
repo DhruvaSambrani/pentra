@@ -5,7 +5,7 @@ def main(app, player, source):
 
     if flashlight is None:
         app.clear_alerts()
-        load_asset("script", "default.py", app=app, player=player)
+        load_asset("script", "default.py", app=app, player=player, source="battery")
         return False
     else:
         if flashlight.item.state["charge"] == 0:

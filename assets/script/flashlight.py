@@ -6,7 +6,7 @@ def main(app, player, source):
     app.clear_alerts()
 
     # manually set charge to zero when triggered by the No Charge scene
-    if source == "FlashlightNoCharge":
+    if source.lower() == "FlashlightNoCharge".lower():
         item.state["charge"] = 0
 
     if not item.state["is_on"]:
