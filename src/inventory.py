@@ -28,12 +28,20 @@ class Item:
     def use(self, app):
         if self.has_script:
             status = assets.load_asset(
-                "script", self.name + ".py", app=app, player=player.get_player()
+                "script",
+                self.name + ".py",
+                app=app,
+                player=player.get_player(),
+                source="User",
             )
         else:
             app.clear_alerts()
             status = assets.load_asset(
-                "script", "default.py", app=app, player=player.get_player()
+                "script",
+                "default.py",
+                app=app,
+                player=player.get_player(),
+                source="User",
             )
         return status
 

@@ -1,4 +1,4 @@
-def main(app, player):
+def main(app, player, source):
     from assets import load_asset
     import scriptable
 
@@ -6,8 +6,7 @@ def main(app, player):
     app.clear_alerts()
 
     # manually set charge to zero when triggered by the No Charge scene
-    idx = app.get_scene_id("FlashlightNoCharge")
-    if idx != -1:
+    if source == "FlashlightNoCharge":
         item.state["charge"] = 0
 
     if not item.state["is_on"]:
@@ -43,14 +42,13 @@ def main(app, player):
                 )
             )
     else:
-        app.current_map.light_scale = 0.85
-        item.state["is_on"] = False
-
         if item.state["charge"] > 0:
             # remove internal timer and store time left
             idx = app.get_scene_id("FlashlightTimer")
             item.state["charge"] = app.current_scenes[idx].actions.pop(0).data
             app.current_scenes.pop(idx)
 
+        app.current_map.light_scale = 0.85
+        item.state["is_on"] = False
     # doesn't matter because flashlight is not one-shot
     return True

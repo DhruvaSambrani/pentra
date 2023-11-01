@@ -123,6 +123,10 @@ class Scriptable:
             app.current_scenes.append(assets.load_asset("scene", action.data, app=app))
         elif action.action == "run_script":
             assets.load_asset(
-                "script", action.data, app=app, player=player.get_player()
+                "script",
+                action.data,
+                app=app,
+                player=player.get_player(),
+                source=self.name,
             )
         return False

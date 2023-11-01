@@ -1,4 +1,4 @@
-def main(app, player):
+def main(app, player, source):
     import scriptable
 
     app.current_scenes.append(
