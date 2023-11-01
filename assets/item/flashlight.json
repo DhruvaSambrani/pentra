@@ -1,4 +1,5 @@
 {
-    "name": "Flashlight",
-    "desc": "\"And then there was light.\""
+    "name": "flashlight",
+    "desc": "\"And then there was light.\"",
+    "has_scene": true
 }

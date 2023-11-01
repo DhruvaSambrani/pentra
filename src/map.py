@@ -15,6 +15,8 @@ class Map:
         items_data = meta["items_on_load"]
         self.default_loc = meta["default_loc"]
         self.shader_scale = meta["shader_scale"]
+        self.light_range = meta.get("light_range", 20)
+        self.light_scale = meta.get("light_scale", 0.85)
         self.items = [load_item(elt[0]) for elt in items_data]
         self.item_locs = [Vector2(elt[1]) for elt in items_data]
         self.map_surf = pygame.image.load(os.path.join(folderpath, "map.png"))
@@ -91,13 +93,11 @@ class Map:
         pygame.transform.smoothscale_by(new_surf, self.shader_scale, self.light_surf)
 
     def render(self, disp_surface, viewport):
-        light_range, light_scale = 20, 0.85
-
         p = player.get_player()
         x, y = p.rect.center
-        x1 = x - (light_range * self.shader_scale)
-        y1 = y - (light_range * self.shader_scale)
-        rvp_size = (2 * light_range + 1) * self.shader_scale
+        x1 = x - (self.light_range * self.shader_scale)
+        y1 = y - (self.light_range * self.shader_scale)
+        rvp_size = (2 * self.light_range + 1) * self.shader_scale
 
         x1 = max(0, min(x1, self.map_surf.get_size()[0] - rvp_size))
         y1 = max(0, min(y1, self.map_surf.get_size()[1] - rvp_size))
@@ -112,7 +112,9 @@ class Map:
             ):
                 self.items[i].render(temp_surface, self.item_locs[i] - rvp.topleft)
         p.render(temp_surface, offset=-Vector2(rvp.topleft))
-        self.update_lighting(p.get_tile(self.shader_scale), light_range, light_scale)
+        self.update_lighting(
+            p.get_tile(self.shader_scale), self.light_range, self.light_scale
+        )
 
         temp_surface.blit(
             self.light_surf.subsurface(rvp),

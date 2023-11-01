@@ -9,22 +9,23 @@ from settings import settings
 
 
 class Item:
-    def __init__(self, name, desc, image, collectable, one_shot):
+    def __init__(self, name, desc, image, collectable, one_shot, has_scene):
         self.name = name
         self.desc = desc
         self.image = image
         self.collectable = collectable
         self.one_shot = one_shot
+        self.has_scene = has_scene
 
     def render(self, surface, pos):
         item_rect = self.image.get_rect()
         item_rect.center = pos
         surface.blit(self.image, item_rect)
 
-    def use(self):
-        # return success value; for e.g. usage may only happen if certain conditions are met, so return False if cannot be used.
-        print(self.name)
-        return True
+    def use(self, app):
+        if self.has_scene:
+            app.current_scenes.append(assets.load_asset("scene", self.name+".scn", app))
+        return self.has_scene
 
 
 class Slot:
@@ -141,6 +142,7 @@ def load_item(file):
         image,
         data.get("collectable", True),
         data.get("one_shot", False),
+        data.get("has_scene", False)
     )
 
 

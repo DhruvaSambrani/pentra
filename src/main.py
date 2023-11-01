@@ -108,7 +108,7 @@ class App:
             if event.key == settings.key_map["use_item"]:
                 item = self.inventory.slots[self.inventory.active].item
                 if item is not None:
-                    status = item.use()
+                    status = item.use(self)
                     if status and item.one_shot:
                         self.inventory.drop_item()
 
