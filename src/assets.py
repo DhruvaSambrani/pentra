@@ -8,6 +8,11 @@ import scriptable
 from settings import settings
 
 
+def exists(assettype, name):
+    filepath = os.path.join(settings.assets, assettype, name)
+    return os.path.exists(filepath)
+
+
 def load_asset(assettype, name, additional=None):
     filepath = os.path.join(settings.assets, assettype, name)
     if assettype in ["image", "sprite"]:
