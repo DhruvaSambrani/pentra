@@ -6,7 +6,7 @@ import map
 import inventory
 import scriptable
 from settings import settings
-
+import enemy
 
 def exists(assettype, name):
     filepath = os.path.join(settings.assets, assettype, name)
@@ -36,6 +36,8 @@ def load_asset(assettype, name, additional=None):
         newlocal = {}
         exec(open(filepath).read(), globals(), newlocal)
         return newlocal["script_fun"](additional["app"], additional["player"])
+    if assettype == "enemy":
+        return enemy.Enemy(filepath, additional[0], additional[1])
     return filepath
 
 
