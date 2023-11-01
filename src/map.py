@@ -21,7 +21,7 @@ class Map:
         self.item_locs = [Vector2(elt[1]) for elt in items_data]
         self.enemies = [
             assets.load_asset(
-                "enemy", i["name"], i["pos"]
+                "enemy", i["name"], pos=i["pos"]
             )
             for i in meta["enemies"]
         ]
