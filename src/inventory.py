@@ -6,6 +6,7 @@ from pygame.math import Vector2
 import player
 import assets
 from settings import settings
+import assets
 
 
 class Item:
@@ -18,7 +19,7 @@ class Item:
         self.collectable = data.get("collectable", True)
         self.one_shot = data.get("one_shot", False)
         self.has_script = data.get("has_script", False)
-        self.state = data.get("state", {})
+        self.state = data.get("state", {}) | {"active": False}
 
     def render(self, surface, pos):
         item_rect = self.image.get_rect()
@@ -38,7 +39,7 @@ class Item:
             app.clear_alerts()
             status = assets.load_asset(
                 "script",
-                "default.py",
+                "cannot_use.py",
                 app=app,
                 player=player.get_player(),
                 source="user",
@@ -139,10 +140,21 @@ class Inventory:
                     self.active = i
                     return
 
-    def drop_item(self):
+    def drop_item(self, app, player):
         item = self.slots[self.active].item
-        if self.slots[self.active].quantity > 1:
-            self.slots[self.active].quantity -= 1
-        else:
-            self.slots[self.active].item = None
-        return item
+
+        if item is not None:
+            if not item.state["active"]:
+                if self.slots[self.active].quantity > 1:
+                    self.slots[self.active].quantity -= 1
+                else:
+                    self.slots[self.active].item = None
+
+                return item
+            else:
+                app.clear_alerts()
+                assets.load_asset(
+                    "script", "cannot_drop.py", app=app, player=player, source="user"
+                )
+
+        return None

@@ -53,15 +53,16 @@ class Map:
         for area in self.areas:
             area.trigger(app, point)
 
-    def pickup_item(self, pos):
+    def pickup_item(self, pos, app):
         for i in range(len(self.items)):
             if self.items[i].collectable:
                 if (pos - self.item_locs[i]).magnitude() <= 35:
                     item, _ = self.items.pop(i), self.item_locs.pop(i)
                     return item
             else:
-                self.items[i].use()
-                return None
+                self.items[i].use(app)
+
+        return None
 
     def place_item(self, item, pos):
         self.items.append(item)

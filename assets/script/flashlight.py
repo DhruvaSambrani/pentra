@@ -8,10 +8,12 @@ def main(app, player, source):
     # manually set charge to zero when triggered by the No Charge scene
     if source.lower() == "FlashlightNoCharge".lower():
         item.state["charge"] = 0
+        item.state["active"] = False
 
     if not item.state["is_on"]:
         if item.state["charge"] > 0:
             item.state["is_on"] = True
+            item.state["active"] = True
             app.current_map.light_scale = 0.95
             # visual cue for using light;
             app.current_scenes.append(load_asset("scene", "flashlight_on.scn", app=app))

@@ -79,7 +79,7 @@ class App:
             if event.key == settings.key_map["inv_info"]:
                 self.inventory.show_info = not self.inventory.show_info
             if event.key == settings.key_map["drop_item"]:
-                item = self.inventory.drop_item()
+                item = self.inventory.drop_item(self, player.get_player())
                 if item is not None:
                     self.current_map.place_item(
                         item, Vector2(player.get_player().rect.center)
@@ -87,7 +87,7 @@ class App:
             if event.key == settings.key_map["interact"]:
                 if not self.inventory.is_full():
                     item = self.current_map.pickup_item(
-                        Vector2(player.get_player().rect.center)
+                        Vector2(player.get_player().rect.center), self
                     )
                     if item is not None:
                         self.inventory.add_item(item)
@@ -96,7 +96,7 @@ class App:
                 if item is not None:
                     status = item.use(self)
                     if status and item.one_shot:
-                        self.inventory.drop_item()
+                        self.inventory.drop_item(self, player.get_player())
 
     def on_loop(self):
         for i, current_scene in filter(
