@@ -53,4 +53,5 @@ def main(app, player):
             item.state["charge"] = app.current_scenes[idx].actions.pop(0).data
             app.current_scenes.pop(idx)
 
+    # doesn't matter because flashlight is not one-shot
     return True

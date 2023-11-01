@@ -1,0 +1,3 @@
+WHITE TRANSPARENT -n ALERT
+print "The flashlight should work now.." -l 400x400
+pause 60
