@@ -34,8 +34,13 @@ def load_asset(assettype, name, **kwargs):
         return inventory.Item(filepath)
     if assettype == "script":
         newlocal = {}
-        exec(open(filepath).read(), globals(), newlocal)
-        return newlocal["main"](**kwargs)
+        try:
+            exec(open(filepath).read(), globals(), newlocal)
+            return newlocal["main"](**kwargs)
+        except Exception as e:
+            print("ERROR: while running external script ", name)
+            print(e)
+            exit(0)
     return filepath
 
 
