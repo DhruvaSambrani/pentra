@@ -1,0 +1,4 @@
+WHITE TRANSPARENT -n FlashlightNoCharge
+run_script flashlight.py
+print "Fuck, the flashlight ran out of power!" -l 400x400
+pause 60

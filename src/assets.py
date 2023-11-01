@@ -13,12 +13,12 @@ def exists(assettype, name):
     return os.path.exists(filepath)
 
 
-def load_asset(assettype, name, additional=None):
+def load_asset(assettype, name, **kwargs):
     filepath = os.path.join(settings.assets, assettype, name)
     if assettype in ["image", "sprite"]:
         return pygame.image.load(filepath)
     if assettype == "scene":
-        return scriptable.Scriptable(filepath, additional)
+        return scriptable.Scriptable(filepath, **kwargs)
     if assettype == "sound":
         return pygame.mixer.Sound(filepath)
     if assettype == "music":
@@ -27,7 +27,7 @@ def load_asset(assettype, name, additional=None):
     if assettype == "color":
         return settings.palette[name]
     if assettype == "font":
-        return pygame.font.Font(filepath, additional)
+        return pygame.font.Font(filepath, **kwargs)
     if assettype == "map":
         return map.Map(filepath)
     if assettype == "item":
@@ -35,7 +35,7 @@ def load_asset(assettype, name, additional=None):
     if assettype == "script":
         newlocal = {}
         exec(open(filepath).read(), globals(), newlocal)
-        return newlocal["script_fun"](additional["app"], additional["player"])
+        return newlocal["main"](**kwargs)
     return filepath
 
 

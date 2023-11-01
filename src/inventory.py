@@ -3,8 +3,10 @@ import json
 import pygame
 from pygame.math import Vector2
 
+import player
 import assets
 from settings import settings
+from utils import clear_alerts
 
 
 class Item:
@@ -16,7 +18,8 @@ class Item:
         self.image = assets.load_asset("sprite", data["name"].lower() + ".png")
         self.collectable = data.get("collectable", True)
         self.one_shot = data.get("one_shot", False)
-        self.has_scene = data.get("has_scene", False)
+        self.has_script = data.get("has_script", False)
+        self.state = data.get("state", {})
 
     def render(self, surface, pos):
         item_rect = self.image.get_rect()
@@ -24,11 +27,16 @@ class Item:
         surface.blit(self.image, item_rect)
 
     def use(self, app):
-        if self.has_scene:
-            app.current_scenes.append(
-                assets.load_asset("scene", self.name + ".scn", app)
+        if self.has_script:
+            status = assets.load_asset(
+                "script", self.name + ".py", app=app, player=player.get_player()
             )
-        return self.has_scene
+        else:
+            clear_alerts(app)
+            status = assets.load_asset(
+                "script", "default.py", app=app, player=player.get_player()
+            )
+        return status
 
 
 class Slot:

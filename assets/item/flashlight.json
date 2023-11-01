@@ -1,5 +1,10 @@
 {
     "name": "flashlight",
     "desc": "\"And then there was light.\"",
-    "has_scene": true
+    "has_script": true,
+    "state": {
+        "max_charge": 120,
+        "charge": 120,
+        "is_on": false
+    }
 }

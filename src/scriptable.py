@@ -35,13 +35,14 @@ def _build_meta_parser():
     parser.add_argument("fgcolor")
     parser.add_argument("bgcolor")
     parser.add_argument("-ls", "--line_spacing", type=int, default=40)
+    parser.add_argument("-n", "--name", type=str, default="")
     parser.add_argument("--blocking", action="store_true")
     return parser
 
 
 class Scriptable:
-    def __init__(self, filepath, app):
-        self.file = open(filepath, "r")
+    def __init__(self, file, app, open_as_file=True):
+        self.lines = open(file, "r").readlines() if open_as_file else file
         self.lastline = (0, 0)
         self._display_surf = pygame.Surface(
             app._display_surf.get_size(), flags=pygame.SRCALPHA
@@ -52,13 +53,13 @@ class Scriptable:
     def _parse(self):
         parser = _build_scn_parser()
         self.actions = []
-        lines = self.file.readlines()
-        meta_line = _build_meta_parser().parse_args(shlex.split(lines[0]))
+        meta_line = _build_meta_parser().parse_args(shlex.split(self.lines[0]))
         self.blocking = meta_line.blocking
         self.fgcolor = meta_line.fgcolor
         self.bgcolor = meta_line.bgcolor
         self.line_spacing = meta_line.line_spacing
-        for line in lines[1:]:
+        self.name = meta_line.name
+        for line in self.lines[1:]:
             self.actions.append(parser.parse_args(shlex.split(line)))
         self._display_surf.fill(assets.load_asset("color", self.bgcolor))
 
@@ -119,9 +120,9 @@ class Scriptable:
         elif action.action == "clear":
             self._display_surf.fill(assets.load_asset("color", self.bgcolor))
         elif action.action == "load_scene":
-            app.current_scenes.append(assets.load_asset("scene", action.data, app))
+            app.current_scenes.append(assets.load_asset("scene", action.data, app=app))
         elif action.action == "run_script":
             assets.load_asset(
-                "script", action.data, {"app": app, "player": player.get_player()}
+                "script", action.data, app=app, player=player.get_player()
             )
         return False
