@@ -7,7 +7,7 @@ import json
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, filepath, pos, light_range_pixel):
+    def __init__(self, filepath, pos):
         super().__init__()
         deets = json.load(open(filepath))
         self.name = deets["name"]
@@ -19,7 +19,6 @@ class Enemy(pygame.sprite.Sprite):
             self.image.get_size(), flags=pygame.SRCALPHA
         )
         self.attack_filter.fill((252, 128, 5))
-        self.light_range_pixel = light_range_pixel
         self.speed = 2
         self._steps_for_chdir = 60
         self._steps_for_sound = 120
@@ -28,7 +27,15 @@ class Enemy(pygame.sprite.Sprite):
         self.current_dir = Vector2(0, 0)
         self.attacking = False
 
-    def random_move(self, map):
+    def sound_scaler(self, dist):
+        if dist < 100:
+            return 0.8
+        elif dist > 800:
+            return 0.05
+        else:
+            return 0.75*(1 - (dist - 100) / 700) + 0.05
+
+    def random_move(self, map, player_pos):
         if self._steps_since_chdir > self._steps_for_chdir:
             self.current_dir = Vector2(random.randint(-1, 1), random.randint(-1, 1))
             if self.current_dir != Vector2(0, 0):
@@ -41,13 +48,16 @@ class Enemy(pygame.sprite.Sprite):
             self._steps_since_chdir += self._steps_for_chdir
             self.rect.move_ip(*-self.current_dir)
         if self._steps_since_sound > self._steps_for_sound:
-            assets.load_asset("sound", "faraway_roar.ogg").play()
+            dist = (Vector2(player_pos) - Vector2(self.rect.center)).magnitude()
+            sound = assets.load_asset("sound", "faraway_roar.ogg")
+            sound.set_volume(self.sound_scaler(dist))
+            sound.play()
             self._steps_since_sound = 0
 
     def attack(self, map, player_pos):
         dir = Vector2(player_pos) - Vector2(self.rect.center)
         if dir != Vector2(0, 0):
-            dir = dir.normalize() * self.speed * 2
+            dir = dir.normalize() * self.speed * 3.8
             self._steps_since_sound += 2
         self.rect.move_ip(*dir)
         if map.check_wall_collision(self):
@@ -58,19 +68,17 @@ class Enemy(pygame.sprite.Sprite):
             self._steps_since_sound = 0
 
     def update(self, map, player_pos):
-        if self.can_see(player_pos):
+        if self.can_see(map):
             if not self.attacking:
                 self._steps_since_sound = self._steps_for_sound + 1
             self.attacking = True
             self.attack(map, player_pos)
         else:
             self.attacking = False
-            self.random_move(map)
+            self.random_move(map, player_pos)
 
-    def can_see(self, player_pos):
-        return (
-            Vector2(self.rect.center) - Vector2(player_pos)
-        ).magnitude() < self.light_range_pixel * self.eyesight
+    def can_see(self, map):
+        return map.light_surf.get_at(self.rect.center)[3] > (1 - self.eyesight) * 255
 
     def render(self, surface, offset):
         r = self.rect.copy()
