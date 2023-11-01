@@ -94,8 +94,9 @@ class Inventory:
 
     def get_item_slot(self, item_name):
         for idx, slot in enumerate(self.slots):
-            if slot is not None and (slot.item.name.lower() == item_name.lower()):
-                return slot, idx
+            if slot is not None:
+                if slot.item.name.lower() == item_name.lower():
+                    return slot, idx
 
         return (None, None)
 
