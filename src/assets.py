@@ -6,7 +6,7 @@ import map
 import inventory
 import scriptable
 from settings import settings
-
+import enemy
 
 def exists(assettype, name):
     filepath = os.path.join(settings.assets, assettype, name)
@@ -41,6 +41,8 @@ def load_asset(assettype, name, **kwargs):
             print("ERROR: while running external script ", name)
             print(e)
             exit(0)
+    if assettype == "enemy":
+        return enemy.Enemy(filepath, **kwargs)
     return filepath
 
 

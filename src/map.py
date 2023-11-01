@@ -16,9 +16,15 @@ class Map:
         self.default_loc = meta["default_loc"]
         self.shader_scale = meta["shader_scale"]
         self.light_range = meta.get("light_range", 20)
-        self.light_scale = meta.get("light_scale", 0.85)
+        self.light_scale = meta.get("light_scale", 0.87)
         self.items = [assets.load_asset("item", elt[0]) for elt in items_data]
         self.item_locs = [Vector2(elt[1]) for elt in items_data]
+        self.enemies = [
+            assets.load_asset(
+                "enemy", i["name"], i["pos"]
+            )
+            for i in meta["enemies"]
+        ]
         self.map_surf = pygame.image.load(os.path.join(folderpath, "map.png"))
         pygame.draw.rect(
             self.map_surf,
@@ -115,6 +121,9 @@ class Map:
         for i in range(len(self.items)):
             if rvp.collidepoint(self.item_locs[i]):
                 self.items[i].render(temp_surface, self.item_locs[i] - rvp.topleft)
+        for enemy in self.enemies:
+            if rvp.collidepoint(enemy.rect.center):
+                enemy.render(temp_surface, -Vector2(rvp.topleft))
         p.render(temp_surface, offset=-Vector2(rvp.topleft))
         self.update_lighting(
             p.get_tile(self.shader_scale), self.light_range, self.light_scale

@@ -114,6 +114,8 @@ class App:
         )
         self.viewport.clamp_ip(self.current_map.map_surf.get_rect())
         player.get_player().update(self.current_map, pygame.key.get_pressed())
+        for enemy in self.current_map.enemies:
+            enemy.update(self.current_map, player.get_player().rect.center)
         self.current_map.check_areas(self, player.get_player().rect.center)
 
     def on_render(self):
