@@ -36,6 +36,7 @@ class Item:
                 source="user",
             )
         else:
+            print(self.name)
             app.clear_alerts()
             status = assets.load_asset(
                 "script",
