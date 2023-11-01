@@ -1,13 +1,12 @@
 def main(app, player):
     from assets import load_asset
-    from utils import get_scene_id, clear_alerts
     import scriptable
 
     item = app.inventory.get_item_slot("Flashlight")[0].item
-    clear_alerts(app)
+    app.clear_alerts()
 
     # manually set charge to zero when triggered by the No Charge scene
-    idx = get_scene_id("FlashlightNoCharge", app)
+    idx = app.get_scene_id("FlashlightNoCharge")
     if idx != -1:
         item.state["charge"] = 0
 
@@ -49,7 +48,7 @@ def main(app, player):
 
         if item.state["charge"] > 0:
             # remove internal timer and store time left
-            idx = get_scene_id("FlashlightTimer", app)
+            idx = app.get_scene_id("FlashlightTimer")
             item.state["charge"] = app.current_scenes[idx].actions.pop(0).data
             app.current_scenes.pop(idx)
 

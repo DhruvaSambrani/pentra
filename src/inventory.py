@@ -6,7 +6,6 @@ from pygame.math import Vector2
 import player
 import assets
 from settings import settings
-from utils import clear_alerts
 
 
 class Item:
@@ -32,7 +31,7 @@ class Item:
                 "script", self.name + ".py", app=app, player=player.get_player()
             )
         else:
-            clear_alerts(app)
+            app.clear_alerts()
             status = assets.load_asset(
                 "script", "default.py", app=app, player=player.get_player()
             )

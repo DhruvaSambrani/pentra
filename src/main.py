@@ -143,6 +143,21 @@ class App:
             self.FPS.tick(30)
         self.on_cleanup()
 
+    def get_scene_id(self, name):
+        return next(
+            (
+                idx
+                for idx, scene in enumerate(self.current_scenes)
+                if scene.name == name
+            ),
+            -1,
+        )
+
+    def clear_alerts(self):
+        self.current_scenes = list(
+            filter(lambda scene: scene.name != "ALERT", self.current_scenes)
+        )
+
 
 if __name__ == "__main__":
     theApp = App()
