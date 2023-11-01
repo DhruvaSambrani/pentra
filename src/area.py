@@ -14,13 +14,13 @@ class Area:
         filename = self.name + "_enter.scn"
 
         if assets.exists("scene", filename):
-            app.current_scenes.append(assets.load_asset("scene", filename, app))
+            app.current_scenes.append(assets.load_asset("scene", filename, app=app))
 
     def on_exit(self, app):
         filename = self.name + "_exit.scn"
 
         if assets.exists("scene", filename):
-            app.current_scenes.append(assets.load_asset("scene", filename, app))
+            app.current_scenes.append(assets.load_asset("scene", filename, app=app))
 
     def _point_in(self, point):
         return self.rect.collidepoint(point)
