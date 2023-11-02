@@ -20,10 +20,8 @@ class Map:
         self.items = [assets.load_asset("item", elt[0]) for elt in items_data]
         self.item_locs = [Vector2(elt[1]) for elt in items_data]
         self.enemies = [
-            assets.load_asset(
-                "enemy", i["name"], pos=i["pos"]
-            )
-            for i in meta["enemies"]
+            assets.load_asset("enemy", i["name"], pos=i["pos"])
+            for i in meta.get("enemies", [])
         ]
         self.map_surf = pygame.image.load(os.path.join(folderpath, "map.png"))
         pygame.draw.rect(
