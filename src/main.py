@@ -26,10 +26,7 @@ class App:
         self.current_map = None
         self.inventory = Inventory(
             8,
-            [
-                load_asset("item", elt)
-                for elt in ["camera", "cross", "battery", "flashlight"]
-            ],
+            [load_asset("item", elt) for elt in ["camera"]],
         )
         self.current_scenes = []
         self.viewport_track_speed = 0.05

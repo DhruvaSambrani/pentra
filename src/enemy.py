@@ -33,7 +33,7 @@ class Enemy(pygame.sprite.Sprite):
         elif dist > 800:
             return 0.05
         else:
-            return 0.75*(1 - (dist - 100) / 700) + 0.05
+            return 0.75 * (1 - (dist - 100) / 700) + 0.05
 
     def random_move(self, map, player_pos):
         if self._steps_since_chdir > self._steps_for_chdir:
@@ -57,7 +57,7 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self, map, player_pos):
         dir = Vector2(player_pos) - Vector2(self.rect.center)
         if dir != Vector2(0, 0):
-            dir = dir.normalize() * self.speed * 3.8
+            dir = dir.normalize() * self.speed * 3.4
             self._steps_since_sound += 2
         self.rect.move_ip(*dir)
         if map.check_wall_collision(self):
