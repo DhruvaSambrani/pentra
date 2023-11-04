@@ -42,7 +42,7 @@ class Item:
                 "script",
                 "cannot_use.py",
                 app=app,
-                player=player.get_player(),
+                player=player.get_player(app),
                 source="user",
             )
         return status

@@ -148,7 +148,7 @@ class Scriptable:
                 "script",
                 action.data,
                 app=app,
-                player=player.get_player(),
+                player=player.get_player(app),
                 source=self.name.lower(),
             )
         return False
