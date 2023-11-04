@@ -25,7 +25,10 @@ def load_asset(assettype, name, **kwargs):
         pygame.mixer.music.load(filepath)
         return
     if assettype == "color":
-        return settings.palette[name]
+        c = settings.palette[name]
+        if len(c) == 3:
+            c.append(255)
+        return c
     if assettype == "font":
         return pygame.font.Font(filepath, **kwargs)
     if assettype == "map":

@@ -33,7 +33,7 @@ class Enemy(pygame.sprite.Sprite):
         elif dist > 800:
             return 0.05
         else:
-            return 0.75*(1 - (dist - 100) / 700) + 0.05
+            return 0.75 * (1 - (dist - 100) / 700) + 0.05
 
     def random_move(self, map, player_pos):
         if self._steps_since_chdir > self._steps_for_chdir:
@@ -67,15 +67,19 @@ class Enemy(pygame.sprite.Sprite):
             assets.load_asset("sound", "monster-attack-roar.ogg").play()
             self._steps_since_sound = 0
 
-    def update(self, map, player_pos):
+    def update(self, map, player):
         if self.can_see(map):
             if not self.attacking:
                 self._steps_since_sound = self._steps_for_sound + 1
             self.attacking = True
-            self.attack(map, player_pos)
+            self.attack(map, player.rect.center)
+            if (
+                Vector2(player.rect.center) - Vector2(self.rect.center)
+            ).magnitude() < 20:
+                player.die(self.name)
         else:
             self.attacking = False
-            self.random_move(map, player_pos)
+            self.random_move(map, player.rect.center)
 
     def can_see(self, map):
         return map.light_surf.get_at(self.rect.center)[3] > (1 - self.eyesight) * 255

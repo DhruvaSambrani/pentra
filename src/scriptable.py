@@ -20,6 +20,8 @@ def _build_scn_parser():
             "run_script",
             "clear",
             "load_scene",
+            "fade_in",
+            "fade_out",
         ],
     )
     parser.add_argument("data")
@@ -121,6 +123,26 @@ class Scriptable:
             self._display_surf.fill(assets.load_asset("color", self.bgcolor))
         elif action.action == "load_scene":
             app.current_scenes.append(assets.load_asset("scene", action.data, app=app))
+        elif action.action == "fade_in":
+            data = action.data.strip().split("-")
+            if len(data) == 1:
+                data.append("1")
+            bgcol = assets.load_asset("color", self.bgcolor)
+            bgcol[3] = int(int(data[1]) / int(data[0]) * 255)
+            self._display_surf.fill(bgcol)
+            action.data = data[0] + "-" + str(int(data[1]) + 1)
+            if data[1] != data[0]:
+                self.actions.insert(0, action)
+        elif action.action == "fade_out":
+            data = action.data.split("-")
+            if len(data) == 1:
+                data.append("1")
+            bgcol = assets.load_asset("color", self.bgcolor)
+            bgcol[3] = int(255 * (1 - int(data[1]) / int(data[0])))
+            self._display_surf.fill(bgcol)
+            action.data = data[0] + "-" + str(int(data[1]) + 1)
+            if data[1] != data[0]:
+                self.actions.insert(0, action)
         elif action.action == "run_script":
             assets.load_asset(
                 "script",

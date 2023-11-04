@@ -5,10 +5,11 @@ from pygame.math import Vector2
 
 from assets import load_asset
 from settings import settings
+from scriptable import Scriptable
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, app):
         super().__init__()
         self.image = load_asset("sprite", "player.png")
         self.rect = self.image.get_rect()
@@ -16,6 +17,28 @@ class Player(pygame.sprite.Sprite):
         self.speed = 4
         self._steps_since_sound = 0
         self._steps_for_sound = 30
+        self.app_context = app
+
+    def die(self, enemy_name):
+        self.app_context.current_scenes.append(
+            Scriptable(
+                [
+                    "BLACK PEACH --blocking",
+                    "fade_in 60",
+                    f'print "Shit that {enemy_name} hit me!" -l 400x350',
+                    "pause 60",
+                    'print "Luckily it left me alone when I acted dead."',
+                    "pause 60",
+                    'type "Thank god the first aid box on this floor has medicine."',
+                    'type "This is just like those Pikamen games"',
+                    "pause 30",
+                    "fade_out 90",
+                ],
+                self.app_context,
+                open_as_file=False,
+            )
+        )
+        self.set_position(self.app_context.current_map.first_aid)
 
     def update(self, map, keys):
         dir = Vector2(
@@ -65,8 +88,8 @@ class Player(pygame.sprite.Sprite):
 _player = None
 
 
-def get_player():
+def get_player(app):
     global _player
     if _player is None:
-        _player = Player()
+        _player = Player(app)
     return _player

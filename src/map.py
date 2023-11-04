@@ -37,6 +37,7 @@ class Map:
         self.areas = list(
             map(lambda a: Area(a["name"], a["rect"]), meta.get("areas", []))
         )
+        self.first_aid = meta.get("first_aid", self.default_loc)
 
     def _tile_not_in_bounds(self, tile):
         return (
@@ -104,7 +105,7 @@ class Map:
         pygame.transform.smoothscale_by(new_surf, self.shader_scale, self.light_surf)
 
     def render(self, disp_surface, viewport):
-        p = player.get_player()
+        p = player.get_player(self)
         x, y = p.rect.center
         x1 = x - (self.light_range * self.shader_scale)
         y1 = y - (self.light_range * self.shader_scale)
