@@ -50,7 +50,7 @@ def main(app, player, source):
             item.state["charge"] = app.current_scenes[idx].actions.pop(0).data
             app.current_scenes.pop(idx)
 
-        app.current_map.light_scale = 0.85
+        app.current_map.light_scale = app.current_map.defaults["light_scale"]
         item.state["is_on"] = False
     # doesn't matter because flashlight is not one-shot
     return True

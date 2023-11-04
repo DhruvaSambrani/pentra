@@ -28,7 +28,7 @@ class App:
             8,
             [
                 load_asset("item", elt)
-                for elt in ["camera", "cross", "battery", "flashlight"]
+                for elt in ["camera", "cross", "battery", "flashlight", "phone"]
             ],
         )
         self.current_scenes = []

@@ -1,0 +1,4 @@
+WHITE TRANSPARENT -n ALERT
+print "Hmm. No connection, as usual, in the AB." -l 300x300
+print "Maybe I could walk around a little to see if I get some internet" 
+pause 60

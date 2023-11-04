@@ -1,0 +1,8 @@
+{
+    "name": "Blanket",
+    "desc": "Maybe I can hide under this?\nBut I won't be able to see anything",
+    "has_script": true,
+    "state": {
+        "worn": false
+    }
+}

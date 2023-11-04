@@ -1,0 +1,6 @@
+{
+    "name": "Bat",
+    "sprite": "bat.png",
+    "eyesight": 0.4,
+    "speed": 3
+}

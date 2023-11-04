@@ -6,6 +6,7 @@ from pygame.math import Vector2
 import assets
 import player
 from area import Area
+from copy import copy
 
 
 class Map:
@@ -38,6 +39,10 @@ class Map:
             map(lambda a: Area(a["name"], a["rect"]), meta.get("areas", []))
         )
         self.first_aid = meta.get("first_aid", self.default_loc)
+        self.defaults = {
+            "light_scale": self.light_scale,
+            "light_range": self.light_range,
+        }
 
     def _tile_not_in_bounds(self, tile):
         return (
