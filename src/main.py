@@ -51,15 +51,15 @@ class App:
         self._display_surf.fill(load_asset("color", "BLACK"))
         self._running = True
         if not debug:
-            self.current_scenes.append(load_asset("scene", "open1.scn", self))
+            self.current_scenes.append(load_asset("scene", "open1.scn", app=self))
         self.change_map(self.MAP_ATLAS[0])
 
     def change_map(self, newmap, loc=None):
         self.current_map = newmap
         if loc:
-            player.get_player().set_position(loc)
+            player.get_player(self).set_position(loc)
         else:
-            player.get_player().set_position(self.current_map.default_loc)
+            player.get_player(self).set_position(self.current_map.default_loc)
 
     def on_event(self, event):
         # handle global events (such as quit or other)
@@ -79,15 +79,15 @@ class App:
             if event.key == settings.key_map["inv_info"]:
                 self.inventory.show_info = not self.inventory.show_info
             if event.key == settings.key_map["drop_item"]:
-                item = self.inventory.drop_item(self, player.get_player())
+                item = self.inventory.drop_item(self, player.get_player(self))
                 if item is not None:
                     self.current_map.place_item(
-                        item, Vector2(player.get_player().rect.center)
+                        item, Vector2(player.get_player(self).rect.center)
                     )
             if event.key == settings.key_map["interact"]:
                 if not self.inventory.is_full():
                     item = self.current_map.pickup_item(
-                        Vector2(player.get_player().rect.center), self
+                        Vector2(player.get_player(self).rect.center), self
                     )
                     if item is not None:
                         self.inventory.add_item(item)
@@ -96,7 +96,7 @@ class App:
                 if item is not None:
                     status = item.use(self)
                     if status and item.one_shot:
-                        self.inventory.drop_item(self, player.get_player())
+                        self.inventory.drop_item(self, player.get_player(self))
 
     def on_loop(self):
         for i, current_scene in filter(
@@ -109,14 +109,17 @@ class App:
             if current_scene.next(self):
                 self.current_scenes.pop(i)
         self.viewport.move_ip(
-            (Vector2(player.get_player().rect.center) - Vector2(self.viewport.center))
+            (
+                Vector2(player.get_player(self).rect.center)
+                - Vector2(self.viewport.center)
+            )
             * self.viewport_track_speed
         )
         self.viewport.clamp_ip(self.current_map.map_surf.get_rect())
-        player.get_player().update(self.current_map, pygame.key.get_pressed())
+        player.get_player(self).update(self.current_map, pygame.key.get_pressed())
         for enemy in self.current_map.enemies:
-            enemy.update(self.current_map, player.get_player().rect.center)
-        self.current_map.check_areas(self, player.get_player().rect.center)
+            enemy.update(self.current_map, player.get_player(self))
+        self.current_map.check_areas(self, player.get_player(self).rect.center)
 
     def on_render(self):
         self._display_surf.fill(load_asset("color", "BLACK"))

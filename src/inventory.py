@@ -32,7 +32,7 @@ class Item:
                 "script",
                 self.name + ".py",
                 app=app,
-                player=player.get_player(),
+                player=player.get_player(app),
                 source="user",
             )
         else:
