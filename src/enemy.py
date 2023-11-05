@@ -13,13 +13,13 @@ class Enemy(pygame.sprite.Sprite):
         self.name = deets["name"]
         self.eyesight = deets["eyesight"]
         self.image = assets.load_asset("sprite", deets["sprite"])
+        self.speed = deets.get("speed", 2)
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.attack_filter = pygame.surface.Surface(
             self.image.get_size(), flags=pygame.SRCALPHA
         )
         self.attack_filter.fill((252, 128, 5))
-        self.speed = 2
         self._steps_for_chdir = 60
         self._steps_for_sound = 120
         self._steps_since_chdir = 601
